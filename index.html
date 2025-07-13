@@ -5,13 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>빠끄동의 바이브 코딩 자료실</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700;900&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap">
     <style>
         body {
             /* 배경색을 흰색으로, 글자색을 검은색으로 변경 */
             background-color: #ffffff;
             color: #111827; 
             font-family: 'Noto Sans KR', sans-serif;
+        }
+        /* 카드 호버 효과를 위한 스타일 추가 */
+        .link-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
         }
     </style>
 </head>
@@ -23,5 +28,26 @@
       - 폰트 크기를 text-3xl md:text-4xl로 조정했습니다.
     -->
     <h1 class="text-3xl md:text-4xl font-black text-center">빠끄동의 바이브 코딩 자료실</h1>
+
+    <!-- 링크 섹션 추가 -->
+    <div class="container mx-auto px-6 mt-12">
+        <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+            
+            <!-- 오늘의 크로스워드 링크 카드 -->
+            <a href="https://hobbyco.github.io/cross_word/index.html" 
+               class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
+                <h2 class="text-2xl font-bold text-gray-800">오늘의 크로스워드</h2>
+                <p class="text-gray-500 mt-2">매일 새로운 십자말풀이에 도전하세요.</p>
+            </a>
+            
+            <!-- 클라이밍 암장 검색기 링크 카드 -->
+            <a href="https://hobbyco.github.io/climbing/index.html" 
+               class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
+                <h2 class="text-2xl font-bold text-gray-800">클라이밍 암장 검색기</h2>
+                <p class="text-gray-500 mt-2">전국의 클라이밍장을 쉽게 찾아보세요.</p>
+            </a>
+
+        </div>
+    </div>
 </body>
 </html>
