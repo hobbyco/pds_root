@@ -72,8 +72,13 @@
 </head>
 <body class="pt-16">
     <main>
-        <h1 class="text-4xl md:text-5xl font-black text-center">
-            <span class="gradient-text">pdongsoo의 바이브 코딩 자료실</span>
+        <!-- 
+          - 모바일에서 제목이 두 줄로 보이도록 <br> 태그를 추가합니다.
+          - md:hidden 클래스는 화면이 md 사이즈(768px) 이상일 때 <br> 태그를 숨깁니다.
+          - 모바일 글자 크기를 text-4xl에서 text-3xl로 조정하여 두 줄일 때 더 보기 좋게 만듭니다.
+        -->
+        <h1 class="text-3xl md:text-5xl font-black text-center leading-tight md:leading-normal">
+            <span class="gradient-text">pdongsoo의<br class="md:hidden"> 바이브 코딩 자료실</span>
         </h1>
 
         <!-- 링크 섹션 추가 -->
