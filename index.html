@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
     <!-- Google Analytics (GA) Tracking Code -->
-    <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFCTS5DZ6V"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -16,52 +15,78 @@
     </script>
     
     <!-- SEO - Basic Meta Tags -->
-    <title>빠끄동의 바이브 코딩 자료실</title>
-    <meta name="description" content="빠끄동의 바이브 코딩 자료실입니다. 오늘의 크로스워드, 클라이밍 암장 검색기 등 다양한 프로젝트를 만나보세요.">
-    <meta name="keywords" content="빠끄동, 바이브 코딩, 코딩 자료실, 개발, 프로젝트, 오늘의 크로스워드, 십자말풀이, 클라이밍, 암장 검색기">
-    <meta name="author" content="빠끄동">
+    <title>pdongsoo의 바이브 코딩 자료실</title>
+    <meta name="description" content="pdongsoo의 바이브 코딩 자료실입니다. 오늘의 크로스워드, 클라이밍 암장 검색기 등 다양한 프로젝트를 만나보세요.">
+    <meta name="keywords" content="pdongsoo, 바이브 코딩, 코딩 자료실, 개발, 프로젝트, 오늘의 크로스워드, 십자말풀이, 클라이밍, 암장 검색기, 인스타그램, 페이스북">
+    <meta name="author" content="pdongsoo">
 
     <!-- SEO - Open Graph (for social media sharing, e.g., Facebook, KakaoTalk) -->
-    <meta property="og:title" content="빠끄동의 바이브 코딩 자료실">
+    <meta property="og:title" content="pdongsoo의 바이브 코딩 자료실">
     <meta property="og:description" content="오늘의 크로스워드, 클라이밍 암장 검색기 등 다양한 프로젝트를 만나보세요.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://hobbyco.github.io/pds_root/index.html">
-    <meta property="og:image" content="https://placehold.co/1200x630/ffffff/111827?text=빠끄동의+바이브+코딩+자료실">
+    <meta property="og:image" content="https://placehold.co/1200x630/ffffff/111827?text=pdongsoo의+바이브+코딩+자료실">
     
     <!-- SEO - Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="빠끄동의 바이브 코딩 자료실">
+    <meta name="twitter:title" content="pdongsoo의 바이브 코딩 자료실">
     <meta name="twitter:description" content="오늘의 크로스워드, 클라이밍 암장 검색기 등 다양한 프로젝트를 만나보세요.">
-    <meta name="twitter:image" content="https://placehold.co/1200x630/ffffff/111827?text=빠끄동의+바이브+코딩+자료실">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/ffffff/111827?text=pdongsoo의+바이브+코딩+자료실">
 
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons Library -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap">
     <style>
         body {
-            /* 배경색을 흰색으로, 글자색을 검은색으로 변경 */
-            background-color: #ffffff;
+            /* 부드러운 느낌을 위해 아주 연한 회색 배경을 추가합니다. */
+            background-color: #f9fafb;
             color: #111827; 
             font-family: 'Noto Sans KR', sans-serif;
         }
-        /* 카드 호버 효과를 위한 스타일 추가 */
+        /* 카드 호버 효과를 강화합니다. */
+        .link-card {
+            transition: all 0.3s ease-in-out;
+            border-top: 4px solid transparent;
+        }
         .link-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+        /* 카드별로 다른 색상 테두리를 추가합니다. */
+        .card-border-blue {
+            border-top-color: #3b82f6;
+        }
+        .card-border-green {
+            border-top-color: #22c55e;
+        }
+        /* 제목에 그라데이션 효과를 줍니다. */
+        .gradient-text {
+            background: linear-gradient(to right, #3b82f6, #14b8a6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
         }
     </style>
 </head>
 <body class="pt-16">
     <main>
-        <h1 class="text-3xl md:text-4xl font-black text-center">빠끄동의 바이브 코딩 자료실</h1>
+        <h1 class="text-4xl md:text-5xl font-black text-center">
+            <span class="gradient-text">pdongsoo의 바이브 코딩 자료실</span>
+        </h1>
 
         <!-- 링크 섹션 추가 -->
-        <section class="container mx-auto px-6 mt-12">
-            <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+        <section class="container mx-auto px-6 mt-20">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-10">
                 
                 <!-- 오늘의 크로스워드 링크 카드 -->
                 <article>
                     <a href="https://hobbyco.github.io/cross_word/index.html" 
-                       class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
+                       class="link-card card-border-blue block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
+                        <div class="flex justify-center mb-4">
+                            <i data-lucide="puzzle" class="w-12 h-12 text-blue-500"></i>
+                        </div>
                         <h2 class="text-2xl font-bold text-gray-800">오늘의 크로스워드</h2>
                         <p class="text-gray-500 mt-2">매일 새로운 십자말풀이에 도전하세요.</p>
                     </a>
@@ -70,9 +95,12 @@
                 <!-- 클라이밍 암장 검색기 링크 카드 -->
                 <article>
                     <a href="https://hobbyco.github.io/climbing/index.html" 
-                       class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
+                       class="link-card card-border-green block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
+                        <div class="flex justify-center mb-4">
+                            <i data-lucide="mountain" class="w-12 h-12 text-green-500"></i>
+                        </div>
                         <h2 class="text-2xl font-bold text-gray-800">클라이밍 암장 검색기</h2>
-                        <p class="text-gray-500 mt-2">전국의 클라이밍장을 쉽게 찾아보세요.</p>
+                        <p class="text-gray-500 mt-2"> 원정러를 위한 클라이밍 암장 검색기 </p>
                     </a>
                 </article>
 
@@ -80,8 +108,27 @@
         </section>
     </main>
 
-    <!-- 
-        방문자 카운터 footer와 관련 script를 삭제했습니다. 
-    -->
+    <!-- 피드백 및 소셜 링크 footer -->
+    <footer class="text-center py-10 mt-20 border-t border-gray-200">
+        <!-- 소셜 미디어 아이콘 링크 -->
+        <div class="flex justify-center gap-6 mb-6">
+            <a href="https://www.instagram.com/p_dong_soo" target="_blank" rel="noopener noreferrer" aria-label="인스타그램 바로가기" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i data-lucide="instagram" class="w-7 h-7"></i>
+            </a>
+            <a href="https://www.facebook.com/pdongsoo" target="_blank" rel="noopener noreferrer" aria-label="페이스북 바로가기" class="text-gray-400 hover:text-gray-600 transition-colors">
+                <i data-lucide="facebook" class="w-7 h-7"></i>
+            </a>
+        </div>
+        <!-- 네이버폼 피드백 링크 -->
+        <a href="https://naver.me/FPUXJiqg" target="_blank" rel="noopener noreferrer" class="text-sm text-gray-500 underline hover:text-gray-700 transition-colors">
+            네이버폼으로 피드백 보내기
+        </a>
+    </footer>
+
+    <script>
+        // Lucide 아이콘을 렌더링합니다.
+        lucide.createIcons();
+    </script>
+
 </body>
 </html>
