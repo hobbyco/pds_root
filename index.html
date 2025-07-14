@@ -80,48 +80,8 @@
         </section>
     </main>
 
-    <!-- 방문자 카운터 -->
-    <footer class="fixed bottom-0 right-0 p-4">
-        <div id="visitor-counter" class="text-sm text-gray-400"></div>
-    </footer>
-
-    <script>
-        // 페이지가 로드될 때 방문자 수 로직 실행
-        window.addEventListener('load', function() {
-            // --- 누적 방문자 수 처리 ---
-            let totalVisitors = localStorage.getItem('totalVisitors');
-            if (totalVisitors === null) {
-                // 첫 방문 시 1로 초기화
-                totalVisitors = 1;
-            } else {
-                // 기존 방문자 수에 1 더하기
-                totalVisitors = parseInt(totalVisitors) + 1;
-            }
-            // 새로운 누적 방문자 수 저장
-            localStorage.setItem('totalVisitors', totalVisitors);
-
-            // --- 오늘의 방문자 수 처리 ---
-            const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD' 형식의 오늘 날짜
-            let todayVisitorsData = JSON.parse(localStorage.getItem('todayVisitors'));
-            let todayCount;
-
-            if (todayVisitorsData && todayVisitorsData.date === today) {
-                // 오늘 이미 방문한 경우, 카운트만 1 증가
-                todayCount = todayVisitorsData.count + 1;
-            } else {
-                // 오늘 첫 방문이거나 날짜가 바뀐 경우, 1로 초기화
-                todayCount = 1;
-            }
-            // 오늘 날짜와 새로운 카운트 저장
-            localStorage.setItem('todayVisitors', JSON.stringify({ date: today, count: todayCount }));
-
-            // --- 화면에 표시 ---
-            const counterElement = document.getElementById('visitor-counter');
-            if (counterElement) {
-                // ( 오늘의 방문자 수 , 누적 방문자 수 ) 형태로 텍스트 설정
-                counterElement.textContent = `( ${todayCount} , ${totalVisitors} )`;
-            }
-        });
-    </script>
+    <!-- 
+        방문자 카운터 footer와 관련 script를 삭제했습니다. 
+    -->
 </body>
 </html>
