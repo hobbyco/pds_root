@@ -3,7 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Google Analytics (GA) Tracking Code -->
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFCTS5DZ6V"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+    
+      gtag('config', 'G-KFCTS5DZ6V');
+    </script>
+    
+    <!-- SEO - Basic Meta Tags -->
     <title>빠끄동의 바이브 코딩 자료실</title>
+    <meta name="description" content="빠끄동의 바이브 코딩 자료실입니다. 오늘의 크로스워드, 클라이밍 암장 검색기 등 다양한 프로젝트를 만나보세요.">
+    <meta name="keywords" content="빠끄동, 바이브 코딩, 코딩 자료실, 개발, 프로젝트, 오늘의 크로스워드, 십자말풀이, 클라이밍, 암장 검색기">
+    <meta name="author" content="빠끄동">
+
+    <!-- SEO - Open Graph (for social media sharing, e.g., Facebook, KakaoTalk) -->
+    <meta property="og:title" content="빠끄동의 바이브 코딩 자료실">
+    <meta property="og:description" content="오늘의 크로스워드, 클라이밍 암장 검색기 등 다양한 프로젝트를 만나보세요.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://hobbyco.github.io/pds_root/index.html">
+    <meta property="og:image" content="https://placehold.co/1200x630/ffffff/111827?text=빠끄동의+바이브+코딩+자료실">
+    
+    <!-- SEO - Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="빠끄동의 바이브 코딩 자료실">
+    <meta name="twitter:description" content="오늘의 크로스워드, 클라이밍 암장 검색기 등 다양한 프로젝트를 만나보세요.">
+    <meta name="twitter:image" content="https://placehold.co/1200x630/ffffff/111827?text=빠끄동의+바이브+코딩+자료실">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&display=swap">
     <style>
@@ -21,33 +51,77 @@
     </style>
 </head>
 <body class="pt-16">
-    <!-- 
-      - h-screen, flex, items-center, justify-center 클래스를 제거하여 수직 중앙 정렬을 없애고 상단에 배치합니다.
-      - pt-16 (padding-top)을 추가하여 상단에 적절한 여백을 줍니다.
-      - text-center를 추가하여 수평 중앙 정렬을 유지합니다.
-      - 폰트 크기를 text-3xl md:text-4xl로 조정했습니다.
-    -->
-    <h1 class="text-3xl md:text-4xl font-black text-center">빠끄동의 바이브 코딩 자료실</h1>
+    <main>
+        <h1 class="text-3xl md:text-4xl font-black text-center">빠끄동의 바이브 코딩 자료실</h1>
 
-    <!-- 링크 섹션 추가 -->
-    <div class="container mx-auto px-6 mt-12">
-        <div class="flex flex-col md:flex-row justify-center items-center gap-8">
-            
-            <!-- 오늘의 크로스워드 링크 카드 -->
-            <a href="https://hobbyco.github.io/cross_word/index.html" 
-               class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
-                <h2 class="text-2xl font-bold text-gray-800">오늘의 크로스워드</h2>
-                <p class="text-gray-500 mt-2">매일 새로운 십자말풀이에 도전하세요.</p>
-            </a>
-            
-            <!-- 클라이밍 암장 검색기 링크 카드 -->
-            <a href="https://hobbyco.github.io/climbing/index.html" 
-               class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
-                <h2 class="text-2xl font-bold text-gray-800">클라이밍 암장 검색기</h2>
-                <p class="text-gray-500 mt-2">전국의 클라이밍장을 쉽게 찾아보세요.</p>
-            </a>
+        <!-- 링크 섹션 추가 -->
+        <section class="container mx-auto px-6 mt-12">
+            <div class="flex flex-col md:flex-row justify-center items-center gap-8">
+                
+                <!-- 오늘의 크로스워드 링크 카드 -->
+                <article>
+                    <a href="https://hobbyco.github.io/cross_word/index.html" 
+                       class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
+                        <h2 class="text-2xl font-bold text-gray-800">오늘의 크로스워드</h2>
+                        <p class="text-gray-500 mt-2">매일 새로운 십자말풀이에 도전하세요.</p>
+                    </a>
+                </article>
+                
+                <!-- 클라이밍 암장 검색기 링크 카드 -->
+                <article>
+                    <a href="https://hobbyco.github.io/climbing/index.html" 
+                       class="link-card block w-full md:w-80 p-8 bg-gray-50 border border-gray-200 rounded-lg text-center transition-all duration-300 ease-in-out">
+                        <h2 class="text-2xl font-bold text-gray-800">클라이밍 암장 검색기</h2>
+                        <p class="text-gray-500 mt-2">전국의 클라이밍장을 쉽게 찾아보세요.</p>
+                    </a>
+                </article>
 
-        </div>
-    </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 방문자 카운터 -->
+    <footer class="fixed bottom-0 right-0 p-4">
+        <div id="visitor-counter" class="text-sm text-gray-400"></div>
+    </footer>
+
+    <script>
+        // 페이지가 로드될 때 방문자 수 로직 실행
+        window.addEventListener('load', function() {
+            // --- 누적 방문자 수 처리 ---
+            let totalVisitors = localStorage.getItem('totalVisitors');
+            if (totalVisitors === null) {
+                // 첫 방문 시 1로 초기화
+                totalVisitors = 1;
+            } else {
+                // 기존 방문자 수에 1 더하기
+                totalVisitors = parseInt(totalVisitors) + 1;
+            }
+            // 새로운 누적 방문자 수 저장
+            localStorage.setItem('totalVisitors', totalVisitors);
+
+            // --- 오늘의 방문자 수 처리 ---
+            const today = new Date().toISOString().slice(0, 10); // 'YYYY-MM-DD' 형식의 오늘 날짜
+            let todayVisitorsData = JSON.parse(localStorage.getItem('todayVisitors'));
+            let todayCount;
+
+            if (todayVisitorsData && todayVisitorsData.date === today) {
+                // 오늘 이미 방문한 경우, 카운트만 1 증가
+                todayCount = todayVisitorsData.count + 1;
+            } else {
+                // 오늘 첫 방문이거나 날짜가 바뀐 경우, 1로 초기화
+                todayCount = 1;
+            }
+            // 오늘 날짜와 새로운 카운트 저장
+            localStorage.setItem('todayVisitors', JSON.stringify({ date: today, count: todayCount }));
+
+            // --- 화면에 표시 ---
+            const counterElement = document.getElementById('visitor-counter');
+            if (counterElement) {
+                // ( 오늘의 방문자 수 , 누적 방문자 수 ) 형태로 텍스트 설정
+                counterElement.textContent = `( ${todayCount} , ${totalVisitors} )`;
+            }
+        });
+    </script>
 </body>
 </html>
