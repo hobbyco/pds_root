@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KBO 숫자 야구 게임 - 도트 버전</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Press Start 2P', cursive;
+            background-color: #202020; /* 픽셀 게임에 어울리는 어두운 배경 */
+        }
+        /* 입력 필드의 스피너(화살표) 숨기기 */
+        input[type="number"]::-webkit-outer-spin-button,
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+        }
+
+        /* 픽셀 스타일 그림자 및 테두리 */
+        .pixel-border {
+            border: 4px solid #000000;
+            box-shadow: 6px 6px 0px 0px #000000;
+        }
+        .pixel-border-sm {
+            border: 3px solid #000000;
+            box-shadow: 3px 3px 0px 0px #000000;
+        }
+        
+        /* 버튼 클릭 효과 */
+        .pixel-button:active {
+            transform: translate(3px, 3px);
+            box-shadow: none;
+        }
+
+        /* 전광판 불 켜짐 효과 (번쩍임 제거) */
+        .scoreboard-light {
+            transition: background-color 0.2s;
+        }
+        
+        /* 승리 시 깜빡임 효과 */
+        @keyframes blink-text {
+            50% {
+                opacity: 0;
+            }
+        }
+        .animate-win {
+            animation: blink-text 0.7s step-end infinite;
+        }
+        
+        /* SVG 픽셀 렌더링 */
+        .pixelated {
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+        }
+
+    </style>
+</head>
+<body class="text-white flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-md mx-auto bg-[#343434] pixel-border p-6 relative">
+        
+        <!-- 뒤로가기 화살표 -->
+        <a href="index.html" title="뒤로가기" class="absolute top-4 left-4 text-white hover:text-yellow-400 transition-colors duration-150">
+            <svg class="pixelated" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2zm0 18a8 8 0 1 1 8-8 8 8 0 0 1-8 8z"/>
+                <path d="M13.29 15.71l-4.3-4.29 4.3-4.29a1 1 0 0 0-1.42-1.42l-5 5a1 1 0 0 0 0 1.42l5 5a1 1 0 0 0 1.42 0 1 1 0 0 0 0-1.42z"/>
+            </svg>
+        </a>
+        
+        <header class="text-center mb-6 py-2 border-b-4 border-black">
+            <h1 id="game-title" class="text-2xl md:text-3xl text-[#FFD700] drop-shadow-[3px_3px_0_#000]">Exhibition<br>game</h1>
+            <p id="inning-display" class="text-base text-gray-300 mt-4">- INNING -</p>
+        </header>
+
+        <!-- 전광판 -->
+        <div class="flex justify-around items-center bg-black bg-opacity-40 p-4 mb-6 border-2 border-black">
+            <div class="text-center">
+                <p class="text-xl font-bold text-[#55A5FF]">B</p>
+                <div id="ball-light" class="scoreboard-light w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-3xl font-bold bg-[#2C2C2C] border-2 border-black">0</div>
+            </div>
+            <div class="text-center">
+                <p class="text-xl font-bold text-[#6EE7B7]">S</p>
+                <div id="strike-light" class="scoreboard-light w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-3xl font-bold bg-[#2C2C2C] border-2 border-black">0</div>
+            </div>
+            <div class="text-center">
+                <p class="text-xl font-bold text-[#F87171]">O</p>
+                <div id="out-light" class="scoreboard-light w-12 h-12 md:w-16 md:h-16 flex items-center justify-center text-2xl md:text-3xl font-bold bg-[#2C2C2C] border-2 border-black">0</div>
+            </div>
+        </div>
+
+        <!-- 입력 영역과 홈런 메시지 영역 -->
+        <div class="h-24 md:h-28 mb-4 flex items-center justify-center">
+            <div id="input-container" class="flex justify-center items-center gap-2 md:gap-4">
+                <!-- ★ 수정: onfocus 이벤트 추가 -->
+                <input type="number" id="input1" class="w-16 h-16 md:w-20 md:h-20 text-4xl text-center bg-gray-700 text-white pixel-border-sm focus:outline-none focus:bg-gray-600" maxlength="1" oninput="moveToNext(this, 'input2')" onfocus="this.value=''">
+                <input type="number" id="input2" class="w-16 h-16 md:w-20 md:h-20 text-4xl text-center bg-gray-700 text-white pixel-border-sm focus:outline-none focus:bg-gray-600" maxlength="1" oninput="moveToNext(this, 'input3')" onfocus="this.value=''">
+                <input type="number" id="input3" class="w-16 h-16 md:w-20 md:h-20 text-4xl text-center bg-gray-700 text-white pixel-border-sm focus:outline-none focus:bg-gray-600" maxlength="1" oninput="moveToNext(this, null)" onfocus="this.value=''">
+            </div>
+            <div id="win-message-container" class="hidden">
+                <p class="text-4xl text-yellow-300 animate-win">HOME RUN!!</p>
+            </div>
+        </div>
+
+        <!-- 유효성 검사 메시지 영역 -->
+        <p id="validation-message" class="text-center text-sm text-red-400 h-6"></p>
+        <button id="guess-btn" class="w-full bg-[#FFD700] text-black font-bold py-4 text-lg pixel-border-sm pixel-button transition-transform duration-100 mt-2 mb-2">Check !!</button>
+        <!-- 정답 표시 영역 -->
+        <p id="answer-display" class="text-center text-xs text-gray-500 h-4 mb-4"></p>
+
+
+        <!-- 기록 영역 -->
+        <div class="mt-2">
+            <h2 class="text-base font-bold text-center mb-2">HISTORY</h2>
+            <div id="history" class="bg-black bg-opacity-50 p-2 h-40 overflow-y-auto border-2 border-gray-600">
+                <!-- 기록이 여기에 추가됩니다. -->
+            </div>
+        </div>
+        
+        <!-- 바로가기 링크 -->
+        <div class="mt-6 pt-4 border-t-4 border-black flex justify-around">
+            <a href="index.html" class="text-gray-400 hover:text-yellow-400 transition-colors duration-150 text-sm">Main Menu</a>
+            <a href="https://naver.me/FW0LQUnn" target="_blank" class="text-gray-400 hover:text-yellow-400 transition-colors duration-150 text-sm">Feedback</a>
+        </div>
+    </div>
+
+    <script>
+        let secretNumbers;
+        let tryCount = 0;
+        let gameEnded = false;
+
+        const inningDisplay = document.getElementById('inning-display');
+        const ballLight = document.getElementById('ball-light');
+        const strikeLight = document.getElementById('strike-light');
+        const outLight = document.getElementById('out-light');
+        const inputs = [document.getElementById('input1'), document.getElementById('input2'), document.getElementById('input3')];
+        const guessBtn = document.getElementById('guess-btn');
+        const historyEl = document.getElementById('history');
+        const gameTitle = document.getElementById('game-title');
+        const inputContainer = document.getElementById('input-container');
+        const winMessageContainer = document.getElementById('win-message-container');
+        const answerDisplay = document.getElementById('answer-display');
+        const validationMessage = document.getElementById('validation-message');
+
+
+        function initGame() {
+            const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+            secretNumbers = [];
+            for (let i = 0; i < 3; i++) {
+                const randomIndex = Math.floor(Math.random() * numbers.length);
+                secretNumbers.push(numbers.splice(randomIndex, 1)[0]);
+            }
+            
+            answerDisplay.textContent = 'Answer: ' + secretNumbers.join(' ');
+            console.log('정답:', secretNumbers);
+
+            tryCount = 0;
+            gameEnded = false;
+            
+            inningDisplay.textContent = '- INNING -';
+            inningDisplay.classList.remove('animate-win', 'text-yellow-300');
+            updateScoreboard(0, 0, 0);
+            historyEl.innerHTML = '';
+            
+            inputContainer.classList.remove('hidden');
+            winMessageContainer.classList.add('hidden');
+
+            inputs.forEach(input => {
+                input.value = '';
+                input.disabled = false;
+            });
+            inputs[0].focus();
+            
+            guessBtn.disabled = false;
+            guessBtn.textContent = 'Check !!';
+            guessBtn.onclick = handleGuess;
+            guessBtn.classList.remove('bg-black', 'text-yellow-200');
+            guessBtn.classList.add('bg-[#FFD700]', 'text-black');
+            validationMessage.textContent = ''; // 메시지 초기화
+        }
+
+        function moveToNext(current, nextFieldId) {
+            if (current.value.length > 1){
+                current.value = current.value.slice(0,1);
+            }
+            if (current.value.length >= 1) {
+                if (nextFieldId) {
+                    document.getElementById(nextFieldId).focus();
+                } else {
+                    guessBtn.focus();
+                }
+            }
+        }
+        
+        function showValidationMessage(message) {
+            validationMessage.textContent = message;
+            setTimeout(() => {
+                validationMessage.textContent = '';
+            }, 2000); // 2초 후에 메시지 사라짐
+        }
+        
+        inputs.forEach((input, index) => {
+            input.addEventListener('keyup', (e) => {
+                if (e.key === 'Enter' && index === 2 && input.value.length > 0) {
+                    handleGuess();
+                }
+            });
+        });
+
+        function handleGuess() {
+            if (gameEnded) return;
+
+            const userGuess = inputs.map(input => input.value);
+
+            if (userGuess.some(val => val.length > 1)) {
+                showValidationMessage('숫자는 한칸에 하나만 입력해주세요');
+                return;
+            }
+            if (userGuess.some(val => val === '')) {
+                return;
+            }
+            if (new Set(userGuess).size !== 3) {
+                showValidationMessage('중복된 숫자가 입력되었습니다');
+                return;
+            }
+            if (userGuess.includes('0')) {
+                showValidationMessage('1-9 사이의 숫자만 입력해주세요');
+                return;
+            }
+
+            tryCount++;
+            updateInning();
+
+            const guessNumbers = userGuess.map(Number);
+            let strikes = 0;
+            let balls = 0;
+
+            for (let i = 0; i < 3; i++) {
+                if (guessNumbers[i] === secretNumbers[i]) {
+                    strikes++;
+                } else if (secretNumbers.includes(guessNumbers[i])) {
+                    balls++;
+                }
+            }
+            const outs = 3 - strikes - balls;
+
+            updateScoreboard(balls, strikes, outs);
+            addHistory(guessNumbers, balls, strikes, outs);
+            
+            inputs.forEach(input => input.value = '');
+            inputs[0].focus();
+
+            if (strikes === 3) {
+                endGame(true);
+            }
+        }
+
+        function updateInning() {
+            const inning = Math.floor((tryCount - 1) / 2) + 1;
+            const half = tryCount % 2 === 1 ? 'TOP' : 'BOT';
+            inningDisplay.textContent = `${inning} INNING ${half}`;
+        }
+        
+        function updateScoreboard(b, s, o) {
+            ballLight.textContent = b;
+            strikeLight.textContent = s;
+            outLight.textContent = o;
+            ballLight.style.backgroundColor = b > 0 ? '#55A5FF' : '#2C2C2C';
+            strikeLight.style.backgroundColor = s > 0 ? '#6EE7B7' : '#2C2C2C';
+            outLight.style.backgroundColor = o > 0 ? '#F87171' : '#2C2C2C';
+        }
+
+        function addHistory(guess, b, s, o) {
+            const historyItem = document.createElement('div');
+            historyItem.className = 'flex justify-between items-center p-1 text-base';
+            
+            const inning = Math.floor((tryCount - 1) / 2) + 1;
+            const half = tryCount % 2 === 1 ? 'TOP' : 'BOT';
+            const inningInfo = `${inning} ${half}`;
+
+            const guessAndTryText = `
+                <div class="flex items-center">
+                    <span class="text-xs text-gray-400 w-20">${inningInfo}</span>
+                    <span class="font-mono">${guess.join(' ')}</span>
+                </div>
+            `;
+            
+            const resultText = `
+                <div>
+                    <span class="font-bold ${b > 0 ? 'text-[#55A5FF]' : 'text-gray-600'}">${b}B</span>
+                    <span class="font-bold ${s > 0 ? 'text-[#6EE7B7]' : 'text-gray-600'} ml-2">${s}S</span>
+                    <span class="font-bold ${o > 0 ? 'text-[#F87171]' : 'text-gray-600'} ml-2">${o}O</span>
+                </div>
+            `;
+            
+            historyItem.innerHTML = guessAndTryText + resultText;
+            historyEl.prepend(historyItem);
+        }
+
+        function endGame(isWin) {
+            gameEnded = true;
+            guessBtn.disabled = true;
+            inputs.forEach(input => input.disabled = true);
+            
+            if (isWin) {
+                inputContainer.classList.add('hidden');
+                winMessageContainer.classList.remove('hidden');
+                
+                guessBtn.classList.remove('bg-[#FFD700]', 'text-black');
+                guessBtn.classList.add('bg-black', 'text-yellow-200');
+            }
+            
+            guessBtn.textContent = 'RESTART';
+            setTimeout(() => {
+                guessBtn.disabled = false;
+                guessBtn.onclick = initGame;
+            }, 3000);
+        }
+
+        window.onload = initGame;
+    </script>
+</body>
+</html>
