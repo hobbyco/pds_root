@@ -3,7 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KBO 숫자 야구 게임 - 도트 버전</title>
+    
+    <!-- SEO 및 GA 적용 -->
+    <title>KBO 픽셀 숫자야구 게임</title>
+    <meta name="description" content="레트로 도트 스타일의 숫자 야구 게임을 즐겨보세요! 1부터 9까지의 중복되지 않는 3자리 숫자를 맞춰보세요.">
+    <meta name="keywords" content="숫자야구, 야구게임, 숫자게임, 픽셀게임, 레트로게임, KBO, baseball game, number baseball, pixel game, retro game">
+    
+    <!-- Open Graph (소셜 미디어 공유용) -->
+    <meta property="og:title" content="KBO 픽셀 숫자야구 게임">
+    <meta property="og:description" content="레트로 도트 감성의 숫자 야구 게임! 지금 바로 플레이해보세요.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="YOUR_WEBSITE_URL"> <!-- 실제 웹사이트 주소를 입력하세요 -->
+    <meta property="og:image" content="YOUR_IMAGE_URL"> <!-- 공유할 이미지 주소를 입력하세요 -->
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFCTS5DZ6V"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KFCTS5DZ6V');
+    </script>
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -99,7 +121,6 @@
         <!-- 입력 영역과 홈런 메시지 영역 -->
         <div class="h-24 md:h-28 mb-4 flex items-center justify-center">
             <div id="input-container" class="flex justify-center items-center gap-2 md:gap-4">
-                <!-- ★ 수정: onfocus 이벤트 추가 -->
                 <input type="number" id="input1" class="w-16 h-16 md:w-20 md:h-20 text-4xl text-center bg-gray-700 text-white pixel-border-sm focus:outline-none focus:bg-gray-600" maxlength="1" oninput="moveToNext(this, 'input2')" onfocus="this.value=''">
                 <input type="number" id="input2" class="w-16 h-16 md:w-20 md:h-20 text-4xl text-center bg-gray-700 text-white pixel-border-sm focus:outline-none focus:bg-gray-600" maxlength="1" oninput="moveToNext(this, 'input3')" onfocus="this.value=''">
                 <input type="number" id="input3" class="w-16 h-16 md:w-20 md:h-20 text-4xl text-center bg-gray-700 text-white pixel-border-sm focus:outline-none focus:bg-gray-600" maxlength="1" oninput="moveToNext(this, null)" onfocus="this.value=''">
@@ -158,8 +179,9 @@
                 secretNumbers.push(numbers.splice(randomIndex, 1)[0]);
             }
             
-            answerDisplay.textContent = 'Answer: ' + secretNumbers.join(' ');
-            console.log('정답:', secretNumbers);
+            // ★ 수정: 정답 표시 부분 주석 처리
+            // answerDisplay.textContent = 'Answer: ' + secretNumbers.join(' ');
+            // console.log('정답:', secretNumbers);
 
             tryCount = 0;
             gameEnded = false;
