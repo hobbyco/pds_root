@@ -134,32 +134,40 @@
         </section>
     </main>
 
-    <!-- 피드백 및 소셜 링크 footer -->
-    <footer class="text-center py-10 mt-20 border-t border-gray-200">
-        <!-- 소셜 미디어 아이콘 링크 -->
-        <div class="flex justify-center gap-6 mb-6">
-            <a href="https://www.instagram.com/p_dong_soo" target="_blank" rel="noopener noreferrer" aria-label="인스타그램 바로가기" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <i data-lucide="instagram" class="w-7 h-7"></i>
-            </a>
-            <a href="https://www.facebook.com/pdongsoo" target="_blank" rel="noopener noreferrer" aria-label="페이스북 바로가기" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <i data-lucide="facebook" class="w-7 h-7"></i>
-            </a>
-            <!-- 블로그 아이콘을 네이버 로고 SVG로 변경 -->
-            <a href="https://blog.naver.com/pdongsoo" target="_blank" rel="noopener noreferrer" aria-label="블로그 바로가기" class="text-gray-400 hover:text-green-500 transition-colors">
-                <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16.273 12.845L7.727 3H3v18h4.727V11.155L16.273 21H21V3h-4.727v9.845z"/>
-                </svg>
-            </a>
-        </div>
-        <!-- 네이버폼 피드백 링크 -->
-        <a href="https://naver.me/FPUXJiqg" target="_blank" rel="noopener noreferrer" class="text-sm text-gray-500 underline hover:text-gray-700 transition-colors">
-            네이버폼으로 피드백 보내기
-        </a>
-    </footer>
+    <!-- 푸터가 삽입될 위치 -->
+    <div id="footer-placeholder"></div>
 
     <script>
-        // Lucide 아이콘을 렌더링합니다.
-        lucide.createIcons();
+        // 공통 푸터 삽입
+        fetch('footer.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('네트워크 응답이 올바르지 않습니다: ' + response.statusText);
+                }
+                return response.text();
+            })
+            .then(data => {
+                const placeholder = document.getElementById('footer-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = data;
+                    // 푸터에 있는 Lucide 아이콘을 렌더링하기 위해 함수를 다시 호출합니다.
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('푸터를 불러오는 데 문제가 발생했습니다:', error);
+                const placeholder = document.getElementById('footer-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = '<p class="text-center text-red-500 py-10">푸터를 불러오지 못했습니다. 로컬 환경에서 테스트하는 경우 브라우저 보안 정책(CORS) 때문일 수 있습니다.</p>';
+                }
+            });
+
+        // 페이지의 나머지 Lucide 아이콘을 렌더링합니다.
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     </script>
 
 </body>
