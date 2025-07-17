@@ -17,7 +17,7 @@
     <!-- SEO - Basic Meta Tags -->
     <title>pdongsoo의 바이브 코딩 자료실</title>
     <meta name="description" content="pdongsoo의 바이브 코딩 자료실입니다. 오늘의 크로스워드, 클라이밍 암장 검색기, 미니게임 등 다양한 프로젝트를 만나보세요.">
-    <meta name="keywords" content="pdongsoo, 바이브 코딩, 코딩 자료실, 개발, 프로젝트, 오늘의 크로스워드, 십자말풀이, 클라이밍, 암장 검색기, 미니게임, 인스타그램, 페이스북, 블로그">
+    <meta name="keywords" content="pdongsoo, 바이브 코딩, 코딩 자료실, 개발, 프로젝트, 오늘의 크로스워드, 십자말풀이, 클라이밍, 암장 검색기, 암장 위치 기반 인스타그램, 미니게임, 인스타그램, 페이스북, 블로그">
     <meta name="author" content="pdongsoo">
 
     <!-- SEO - Open Graph (for social media sharing, e.g., Facebook, KakaoTalk) -->
@@ -59,6 +59,9 @@
         }
         .card-border-green {
             border-top-color: #22c55e;
+        }
+        .card-border-pink {
+            border-top-color: #ec4899;
         }
         .card-border-purple {
             border-top-color: #8b5cf6;
@@ -118,6 +121,18 @@
                     </a>
                 </article>
 
+                <!-- 암장 위치 기반 Instagram 링크 카드 -->
+                <article>
+                    <!-- 오류 수정: a 태그 안의 주석을 제거하여 문법 오류를 해결했습니다. -->
+                    <a href="#" class="link-card card-border-pink block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
+                        <div class="flex justify-center mb-4">
+                            <i data-lucide="map-pin" class="w-12 h-12 text-pink-500"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">암장 위치 기반 Instagram</h2>
+                        <p class="text-gray-500 mt-2">장소별 인스타그램 링크 모음</p>
+                    </a>
+                </article>
+
                 <!-- 미니게임 링크 카드 -->
                 <article>
                     <a href="https://hobbyco.github.io/pds_root/mini_games/index_mini_games.html" 
@@ -139,7 +154,7 @@
 
     <script>
         // 공통 푸터 삽입
-        fetch('footer.html')
+        fetch('footer.html') // 메인 페이지와 같은 폴더에 있으므로 상대 경로 사용
             .then(response => {
                 if (!response.ok) {
                     throw new Error('네트워크 응답이 올바르지 않습니다: ' + response.statusText);
