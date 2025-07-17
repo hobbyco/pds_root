@@ -50,16 +50,18 @@
         }
     </style>
 </head>
-<body class="pt-16">
-    <header class="container mx-auto px-6 flex justify-end">
-        <a href="https://hobbyco.github.io/pds_root/index.html" class="text-gray-500 hover:text-gray-800 transition-colors flex items-center">
-            <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
-            메인으로 돌아가기
+<body class="pt-10">
+    <header class="container mx-auto px-6 flex justify-start">
+        <a href="https://hobbyco.github.io/pds_root/index.html" class="inline-flex items-center gap-2 px-4 py-2 bg-green-50 border border-green-200 rounded-lg shadow-sm hover:shadow-md hover:bg-green-100 transition-all text-green-700">
+            <i data-lucide="home" class="w-5 h-5 text-green-500"></i>
+            <div class="text-center text-sm font-semibold">
+                pdongsoo의 <br> 바이브 코딩
+            </div>
         </a>
     </header>
 
     <main>
-        <h1 class="text-3xl md:text-5xl font-black text-center leading-tight md:leading-normal mt-8">
+        <h1 class="text-3xl md:text-5xl font-black text-center leading-tight md:leading-normal mt-12">
             <span class="gradient-text">미니게임</span>
         </h1>
 
@@ -77,7 +79,28 @@
                     <a href="https://hobbyco.github.io/pds_root/mini_games/num_baseball/single_game.html" 
                        class="link-card card-border-red block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
                         <div class="flex justify-center mb-4">
-                            <i data-lucide="baseball" class="w-12 h-12 text-red-500"></i>
+                            <!-- Lucide 아이콘을 커스텀 SVG 아이콘으로 변경 -->
+                            <svg class="w-12 h-12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="12" cy="12" r="10" fill="white" stroke="#dc2626" stroke-width="1.5"/>
+                                <path d="M5.5 12C5.5 8.2 8.5 6 12 6C15.5 6 18.5 8.2 18.5 12" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/>
+                                <path d="M5.5 12C5.5 15.8 8.5 18 12 18C15.5 18 18.5 15.8 18.5 12" stroke="#ef4444" stroke-width="1.5" stroke-linecap="round"/>
+                                <g transform="rotate(45 12 12)">
+                                    <path d="M10 9L11 8" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                    <path d="M13 9L14 8" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                </g>
+                                 <g transform="rotate(45 12 12)">
+                                    <path d="M10 15L11 16" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                    <path d="M13 15L14 16" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                </g>
+                                <g transform="rotate(-45 12 12)">
+                                    <path d="M10 9L11 8" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                    <path d="M13 9L14 8" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                </g>
+                                 <g transform="rotate(-45 12 12)">
+                                    <path d="M10 15L11 16" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                    <path d="M13 15L14 16" stroke="#ef4444" stroke-width="1" stroke-linecap="round"/>
+                                </g>
+                            </svg>
                         </div>
                         <h2 class="text-2xl font-bold text-gray-800">숫자 야구</h2>
                         <p class="text-gray-500 mt-2">컴퓨터의 세 자리 숫자를 맞춰보세요!</p>
@@ -101,32 +124,41 @@
         </section>
     </main>
 
-    <!-- 피드백 및 소셜 링크 footer -->
-    <footer class="text-center py-10 mt-20 border-t border-gray-200">
-        <!-- 소셜 미디어 아이콘 링크 -->
-        <div class="flex justify-center gap-6 mb-6">
-            <a href="https://www.instagram.com/p_dong_soo" target="_blank" rel="noopener noreferrer" aria-label="인스타그램 바로가기" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <i data-lucide="instagram" class="w-7 h-7"></i>
-            </a>
-            <a href="https://www.facebook.com/pdongsoo" target="_blank" rel="noopener noreferrer" aria-label="페이스북 바로가기" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <i data-lucide="facebook" class="w-7 h-7"></i>
-            </a>
-            <!-- 블로그 아이콘을 네이버 로고 SVG로 변경 -->
-            <a href="https://blog.naver.com/pdongsoo" target="_blank" rel="noopener noreferrer" aria-label="블로그 바로가기" class="text-gray-400 hover:text-green-500 transition-colors">
-                <svg class="w-7 h-7" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M16.273 12.845L7.727 3H3v18h4.727V11.155L16.273 21H21V3h-4.727v9.845z"/>
-                </svg>
-            </a>
-        </div>
-        <!-- 네이버폼 피드백 링크 -->
-        <a href="https://naver.me/FPUXJiqg" target="_blank" rel="noopener noreferrer" class="text-sm text-gray-500 underline hover:text-gray-700 transition-colors">
-            네이버폼으로 피드백 보내기
-        </a>
-    </footer>
+    <!-- 푸터가 삽입될 위치 -->
+    <div id="footer-placeholder"></div>
 
     <script>
-        // Lucide 아이콘을 렌더링합니다.
-        lucide.createIcons();
+        // 공통 푸터 삽입
+        // mini_games 폴더 안에 있으므로, 상위 폴더의 footer.html을 참조하기 위해 ../ 를 사용합니다.
+        fetch('../footer.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('네트워크 응답이 올바르지 않습니다: ' + response.statusText);
+                }
+                return response.text();
+            })
+            .then(data => {
+                const placeholder = document.getElementById('footer-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = data;
+                    // 푸터에 있는 Lucide 아이콘을 렌더링하기 위해 함수를 다시 호출합니다.
+                    if (typeof lucide !== 'undefined') {
+                        lucide.createIcons();
+                    }
+                }
+            })
+            .catch(error => {
+                console.error('푸터를 불러오는 데 문제가 발생했습니다:', error);
+                const placeholder = document.getElementById('footer-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = '<p class="text-center text-red-500 py-10">푸터를 불러오지 못했습니다. 로컬 환경에서 테스트하는 경우 브라우저 보안 정책(CORS) 때문일 수 있습니다.</p>';
+                }
+            });
+
+        // 페이지의 나머지 Lucide 아이콘을 렌더링합니다.
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
     </script>
 
 </body>
