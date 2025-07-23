@@ -17,7 +17,7 @@
     <!-- SEO - Basic Meta Tags -->
     <title>pdongsoo의 바이브 코딩 - 미니게임</title>
     <meta name="description" content="pdongsoo의 바이브 코딩 자료실에서 제공하는 간단한 미니게임들을 즐겨보세요.">
-    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 간단한 게임">
+    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 유물 사냥꾼, 간단한 게임">
     <meta name="author" content="pdongsoo">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -40,6 +40,9 @@
         }
         .card-border-red {
             border-top-color: #ef4444;
+        }
+        .card-border-amber {
+            border-top-color: #f59e0b; /* Amber color for treasure */
         }
         .gradient-text {
             background: linear-gradient(to right, #8b5cf6, #ec4899);
@@ -72,10 +75,10 @@
 
         <!-- 게임 링크 섹션 -->
         <section class="container mx-auto px-6 mt-16">
-            <div class="flex flex-wrap justify-center items-center gap-10">
+            <div class="flex flex-wrap justify-center items-stretch gap-10">
                 
                 <!-- 숫자 야구 게임 카드 -->
-                <article>
+                <article class="flex">
                     <a href="https://hobbyco.github.io/pds_root/mini_games/num_baseball/single_game.html" 
                        class="link-card card-border-red block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
                         <div class="flex justify-center mb-4">
@@ -101,18 +104,26 @@
                     </a>
                 </article>
 
-                <!-- 새로운 게임 추가 공간 -->
-                <!-- 
-                <article>
-                    <a href="#" class="link-card card-border-... block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
+                <!-- 유물 사냥꾼 게임 카드 -->
+                <article class="flex">
+                    <a href="https://hobbyco.github.io/pds_root/mini_games/RT_CT/index.html"
+                       class="link-card card-border-amber block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
                         <div class="flex justify-center mb-4">
-                            <i data-lucide="..." class="w-12 h-12 text-..."></i>
+                            <svg class="w-12 h-12 text-amber-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <title>보물 상자 아이콘</title>
+                                <path d="M12 22a2 2 0 0 0 2-2H10a2 2 0 0 0 2 2Z"/>
+                                <path d="M20 12H4"/>
+                                <path d="M20 8H4"/>
+                                <path d="M12 16V8"/>
+                                <path d="M4 12a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v2a2 2 0 0 1-2 2"/>
+                                <path d="M4 12v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"/>
+                            </svg>
                         </div>
-                        <h2 class="text-2xl font-bold text-gray-800">새로운 게임</h2>
-                        <p class="text-gray-500 mt-2">게임 설명을 여기에 작성하세요.</p>
+                        <h2 class="text-2xl font-bold text-gray-800">유물 사냥꾼과 시간의 저주</h2>
+                        <!-- 카드 높이를 맞추기 위해 줄바꿈과 공백 문자를 추가합니다. -->
+                        <p class="text-gray-500 mt-2">유물을 찾아 저주를 풀어보세요!<br>&nbsp;</p>
                     </a>
                 </article>
-                -->
 
             </div>
         </section>
