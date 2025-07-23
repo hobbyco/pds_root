@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>유물 사냥꾼과 시간의 저주</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Myeongjo:wght@400;700&family=Cinzel+Decorative:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 기본 스타일 --- */
+        :root {
+            --font-main: 'Nanum Myeongjo', serif;
+            --font-title: 'Cinzel Decorative', cursive;
+            --color-bg: #f5eadd; /* 양피지 배경 */
+            --color-text: #4a3f35; /* 어두운 갈색 */
+            --color-primary: #8c6b4f; /* 나무색 */
+            --color-accent: #c8a672; /* 금색 */
+            --color-relic: #a4c8a2; /* 유물 카드색 */
+            --color-curse: #d18c8c; /* 저주 카드색 */
+            --shadow: 3px 3px 8px rgba(0,0,0,0.2);
+        }
+
+        body {
+            font-family: var(--font-main);
+            color: var(--color-text);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            box-sizing: border-box;
+            /* --- 배경 이미지 설정 --- */
+            background-image: url('https://hobbyco.github.io/pds_root/mini_games/RT_CT/img/m_bg.png'); /* 모바일 배경 경로 */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed; /* 스크롤 시 배경 고정 */
+        }
+
+        /* --- 게임 컨테이너 --- */
+        #game-container {
+            width: 100%;
+            max-width: 800px;
+            min-width: 320px;
+            background-color: rgba(245, 234, 221, 0.65); /* 배경이 비치도록 반투명 처리 (0.8 -> 0.65) */
+            border: 2px solid var(--color-primary);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* --- 헤더 --- */
+        header {
+            text-align: center;
+            border-bottom: 2px dashed var(--color-primary);
+            padding-bottom: 10px;
+        }
+
+        header h1 {
+            font-family: var(--font-title);
+            font-size: 2.5rem;
+            margin: 0;
+            color: var(--color-primary);
+            text-shadow: 1px 1px 2px var(--color-accent);
+        }
+        
+        .mobile-break {
+            display: none;
+        }
+
+        /* --- 정보 패널 --- */
+        #info-panel {
+            display: flex;
+            justify-content: space-around;
+            background-color: rgba(255, 255, 255, 0.6); /* 투명도 조절 (0.7 -> 0.6) */
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid var(--color-accent);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .info-box {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .info-box h2 {
+            margin: 0 0 5px 0;
+            font-size: 1rem;
+            color: var(--color-primary);
+        }
+
+        .info-box p {
+            margin: 0;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* --- 게임 보드 --- */
+        #game-board {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            height: 220px;
+        }
+
+        .deck-area {
+            flex: 1;
+            border: 2px dashed var(--color-primary);
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: rgba(0,0,0,0.05);
+        }
+
+        .deck-area h3 {
+            margin: 0;
+            position: absolute;
+            top: 10px;
+            font-size: 1rem;
+        }
+
+        .card-pile {
+            width: 100px;
+            height: 150px;
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            background-color: var(--color-accent);
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3rem;
+            font-family: var(--font-title);
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.2s;
+            position: relative;
+        }
+        .card-pile:hover {
+            transform: scale(1.05);
+        }
+        
+        .card-pile::after {
+            content: attr(data-count);
+            position: absolute;
+            bottom: -25px;
+            font-size: 1rem;
+            font-family: var(--font-main);
+            color: var(--color-text);
+            text-shadow: none;
+        }
+
+        #exploration-area {
+            flex: 2;
+            border: 2px solid var(--color-primary);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px; /* 카드 간격 조정 */
+            align-content: flex-start;
+            overflow-y: auto;
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* --- 카드 스타일 --- */
+        .card {
+            width: 65px; /* 카드 너비 조정 */
+            height: 100px; /* 카드 높이 조정 */
+            border-radius: 6px;
+            padding: 4px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            font-size: 0.7rem; /* 폰트 크기 조정 */
+            font-weight: bold;
+            box-shadow: var(--shadow);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease-in-out;
+            animation: flipIn 0.5s ease-in-out;
+        }
+
+        .relic { background-color: var(--color-relic); }
+        .curse { background-color: var(--color-curse); }
+
+        .card .value {
+            font-size: 1.2rem; /* 값 폰트 크기 조정 */
+            font-weight: bold;
+        }
+        
+        @keyframes flipIn {
+            from { transform: rotateY(90deg) scale(0.8); }
+            to { transform: rotateY(0deg) scale(1); }
+        }
+
+        /* --- 메시지 및 컨트롤 --- */
+        #message-area {
+            min-height: 40px;
+            background-color: rgba(255, 255, 255, 0.6); /* 투명도 조절 (0.7 -> 0.6) */
+            border: 1px solid var(--color-accent);
+            border-radius: 10px;
+            padding: 10px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            font-family: var(--font-main);
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background-color: var(--color-primary);
+            color: white;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+        }
+
+        .btn:hover:not(:disabled) {
+            background-color: #6e533c;
+            transform: translateY(-2px);
+            box-shadow: 5px 5px 12px rgba(0,0,0,0.3);
+        }
+
+        .btn:disabled {
+            background-color: #a8a8a8;
+            cursor: not-allowed;
+        }
+        
+        /* --- 모달 --- */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: var(--color-bg);
+            padding: 30px;
+            border: 3px solid var(--color-primary);
+            border-radius: 15px;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            animation: modalOpen 0.4s ease-out;
+        }
+
+        .modal-content h2 {
+            font-family: var(--font-title);
+            font-size: 2rem;
+            color: var(--color-primary);
+        }
+        
+        .modal-content p {
+            font-size: 1.2rem;
+        }
+
+        @keyframes modalOpen {
+            from { transform: scale(0.7); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        
+        /* 모바일 화면 대응 */
+        @media (max-width: 767px) {
+            header h1 {
+                font-size: 1.8rem;
+                line-height: 1.2;
+            }
+            .mobile-break {
+                display: block;
+            }
+        }
+        
+        /* PC 화면 대응 */
+        @media (min-width: 768px) {
+            body {
+                background-image: url('https://hobbyco.github.io/pds_root/mini_games/RT_CT/img/pc_bg.png'); /* PC 배경 경로 */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <header>
+            <h1>유물 사냥꾼과<br class="mobile-break"> 시간의 저주</h1>
+        </header>
+
+        <section id="info-panel">
+            <div class="info-box">
+                <h2>Best Score</h2>
+                <p id="total-score">0</p>
+            </div>
+            <div class="info-box">
+                <h2>이번 탐험 점수</h2>
+                <p id="turn-score">0</p>
+            </div>
+            <div class="info-box">
+                <h2>저주</h2>
+                <p id="curse-level">0 / 5</p>
+            </div>
+        </section>
+
+        <section id="game-board">
+            <div class="deck-area">
+                <h3>탐험 덱</h3>
+                <div id="deck-pile" class="card-pile" data-count="30">
+                    <span>💎</span>
+                </div>
+            </div>
+            <div id="exploration-area">
+                <!-- 뽑은 카드들이 여기에 표시됩니다 -->
+            </div>
+        </section>
+
+        <section id="message-area">
+            <p id="message-text">탐험을 시작하세요!</p>
+        </section>
+
+        <section id="controls">
+            <button id="explore-btn" class="btn">탐험 계속 (카드 뽑기)</button>
+            <button id="stop-btn" class="btn">탐험 중단 (점수 획득)</button>
+        </section>
+    </div>
+
+    <!-- 게임 시작/종료 모달 -->
+    <div id="game-modal" class="modal">
+        <div class="modal-content">
+            <h2 id="modal-title">게임 시작</h2>
+            <p id="modal-text">고대 유적에 오신 것을 환영합니다. 유물을 찾아 점수를 얻으세요. 하지만 저주를 조심하세요! 저주가 5 이상 쌓이면 모든 것을 잃습니다.</p>
+            <p id="modal-final-score"></p>
+            <button id="modal-btn" class="btn">탐험 시작!</button>
+        </div>
+    </div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM 요소 ---
+            const totalScoreEl = document.getElementById('total-score');
+            const turnScoreEl = document.getElementById('turn-score');
+            const curseLevelEl = document.getElementById('curse-level');
+            const deckPileEl = document.getElementById('deck-pile');
+            const explorationAreaEl = document.getElementById('exploration-area');
+            const messageTextEl = document.getElementById('message-text');
+            const exploreBtn = document.getElementById('explore-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            
+            const gameModal = document.getElementById('game-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalText = document.getElementById('modal-text');
+            const modalFinalScore = document.getElementById('modal-final-score');
+            const modalBtn = document.getElementById('modal-btn');
+
+            // --- 게임 설정 ---
+            const CURSE_LIMIT = 5;
+            const CARD_DEFINITIONS = {
+                relics: [
+                    { name: '낡은 동전', value: 1, count: 5 },
+                    { name: '보석 박힌 단검', value: 2, count: 5 },
+                    { name: '황금 잔', value: 3, count: 4 },
+                    { name: '수정 해골', value: 4, count: 3 },
+                    { name: '고대 왕관', value: 5, count: 2 },
+                    { name: '현자의 돌', value: 7, count: 1 },
+                ],
+                curses: [
+                    { name: '박쥐 떼', value: 1, count: 5 },
+                    { name: '함정', value: 1, count: 5 },
+                ]
+            };
+
+            // --- 게임 상태 변수 ---
+            let mainDeck = [];
+            let totalScore = 0;
+            let turnScore = 0;
+            let curseLevel = 0;
+            let turnCards = []; // 이번 턴에 뽑은 카드들
+
+            // --- 게임 로직 함수 ---
+
+            function createDeck() {
+                const deck = [];
+                CARD_DEFINITIONS.relics.forEach(r => {
+                    for (let i = 0; i < r.count; i++) {
+                        deck.push({ type: 'relic', name: r.name, value: r.value });
+                    }
+                });
+                CARD_DEFINITIONS.curses.forEach(c => {
+                    for (let i = 0; i < c.count; i++) {
+                        deck.push({ type: 'curse', name: c.name, value: c.value });
+                    }
+                });
+                return deck;
+            }
+
+            function shuffleDeck(deck) {
+                for (let i = deck.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [deck[i], deck[j]] = [deck[j], deck[i]];
+                }
+            }
+
+            function startGame() {
+                mainDeck = createDeck();
+                shuffleDeck(mainDeck);
+                
+                totalScore = 0;
+                turnScore = 0;
+                curseLevel = 0;
+                turnCards = [];
+                
+                updateUI();
+                explorationAreaEl.innerHTML = '';
+                messageTextEl.textContent = '새로운 탐험이 시작되었습니다.';
+                exploreBtn.disabled = false;
+                stopBtn.disabled = false;
+                gameModal.style.display = 'none';
+            }
+
+            function explore() {
+                if (mainDeck.length === 0) {
+                    messageTextEl.textContent = '더 이상 탐험할 곳이 없습니다!';
+                    stopExploration(true); // 덱이 다 떨어졌으니 강제 종료
+                    return;
+                }
+
+                const card = mainDeck.pop();
+                turnCards.push(card);
+                
+                displayCard(card);
+
+                if (card.type === 'relic') {
+                    turnScore += card.value;
+                    messageTextEl.textContent = `[${card.name}] 발견! (+${card.value}점)`;
+                } else {
+                    curseLevel += card.value;
+                    messageTextEl.textContent = `[${card.name}]! 저주가 쌓입니다. (+${card.value} 저주)`;
+                }
+
+                updateUI();
+                checkGameOver();
+            }
+
+            function stopExploration(isForced = false) {
+                if (turnScore > 0 && !isForced) {
+                    totalScore += turnScore;
+                    messageTextEl.textContent = `${turnScore}점을 획득하고 안전하게 복귀했습니다.`;
+                } else if (isForced) {
+                     messageTextEl.textContent = `저주에 휩싸여 탐험에 실패했습니다!`;
+                }
+                
+                // 턴 초기화
+                turnScore = 0;
+                curseLevel = 0;
+                turnCards = [];
+                explorationAreaEl.innerHTML = '';
+                
+                if (mainDeck.length === 0) {
+                    showEndGameModal(true); // 게임 승리
+                }
+                
+                updateUI();
+            }
+            
+            function checkGameOver() {
+                if (curseLevel >= CURSE_LIMIT) {
+                    exploreBtn.disabled = true;
+                    stopBtn.disabled = true;
+                    messageTextEl.textContent = `저주가 ${CURSE_LIMIT}에 도달했습니다! 탐험 실패!`;
+                    
+                    // 실패 애니메이션
+                    explorationAreaEl.classList.add('shake');
+                    setTimeout(() => {
+                        showEndGameModal(false); // 게임 패배
+                        explorationAreaEl.classList.remove('shake');
+                    }, 1000);
+                }
+            }
+            
+            function showStartModal() {
+                gameModal.style.display = 'flex';
+                modalTitle.textContent = "게임 시작";
+                modalText.textContent = "고대 유적에 오신 것을 환영합니다. 유물을 찾아 점수를 얻으세요. 하지만 저주를 조심하세요! 저주가 5 이상 쌓이면 모든 것을 잃습니다.";
+                modalFinalScore.textContent = '';
+                modalBtn.textContent = "탐험 시작!";
+                modalBtn.onclick = startGame;
+            }
+            
+            function showEndGameModal(isWin) {
+                gameModal.style.display = 'flex';
+                if (isWin) {
+                    modalTitle.textContent = "탐험 성공!";
+                    modalText.textContent = "모든 유적을 탐험하고 무사히 귀환했습니다!";
+                } else {
+                    modalTitle.textContent = "탐험 실패!";
+                    modalText.textContent = "저주의 힘을 이기지 못하고 쓰러졌습니다...";
+                }
+                modalFinalScore.textContent = `최종 점수: ${totalScore}`;
+                modalBtn.textContent = "다시 플레이";
+                modalBtn.onclick = startGame;
+            }
+
+            // --- UI 업데이트 함수 ---
+            function updateUI() {
+                totalScoreEl.textContent = totalScore;
+                turnScoreEl.textContent = turnScore;
+                curseLevelEl.textContent = `${curseLevel} / ${CURSE_LIMIT}`;
+                deckPileEl.dataset.count = mainDeck.length;
+
+                if (curseLevel >= CURSE_LIMIT) {
+                    curseLevelEl.style.color = '#d93a3a';
+                    curseLevelEl.style.fontWeight = 'bold';
+                } else {
+                    curseLevelEl.style.color = 'var(--color-text)';
+                    curseLevelEl.style.fontWeight = 'normal';
+                }
+            }
+
+            function displayCard(card) {
+                const cardEl = document.createElement('div');
+                cardEl.classList.add('card', card.type);
+                
+                const nameEl = document.createElement('span');
+                nameEl.textContent = card.name;
+                
+                const valueEl = document.createElement('span');
+                valueEl.classList.add('value');
+                valueEl.textContent = card.type === 'relic' ? `+${card.value}` : `+${card.value}💀`;
+                
+                cardEl.appendChild(nameEl);
+                cardEl.appendChild(valueEl);
+                
+                explorationAreaEl.appendChild(cardEl);
+                explorationAreaEl.scrollTop = explorationAreaEl.scrollHeight;
+            }
+
+            // --- 이벤트 리스너 ---
+            exploreBtn.addEventListener('click', explore);
+            stopBtn.addEventListener('click', () => stopExploration(false));
+            deckPileEl.addEventListener('click', explore);
+
+            // --- 게임 시작 ---
+            showStartModal();
+        });
+    </script>
+</body>
+</html>
