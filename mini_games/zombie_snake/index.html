@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>좀비 스네이크</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #1e1e1e;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column; /* 콘텐츠를 세로로 정렬 */
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        #menu-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 50px;
+            color: #2ecc71;
+            margin-bottom: 10px;
+        }
+        .menu-group {
+            border: 1px solid #444;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            width: 300px;
+        }
+        .menu-group h2 {
+            margin-top: 0;
+            font-size: 22px;
+            color: #f1c40f;
+        }
+        #stage-select {
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 5px;
+            border: 2px solid #ccc;
+            background-color: #333;
+            color: white;
+            width: 90%;
+            margin-bottom: 15px;
+        }
+        .menu-button {
+            font-size: 20px;
+            padding: 12px 0;
+            border-radius: 5px;
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            width: 90%;
+        }
+        #play-button { background-color: #27ae60; }
+        #play-button:hover { background-color: #2ecc71; }
+        #survival-button { background-color: #e67e22; }
+        #survival-button:hover { background-color: #f39c12; }
+        #time-attack-button { background-color: #c0392b; }
+        #time-attack-button:hover { background-color: #e74c3c; }
+
+        #game-wrapper { display: none; } /* [추가됨] 게임 전체를 감싸는 래퍼 */
+        
+        /* [추가됨] 정보 표시줄 스타일 */
+        #info-bar {
+            background-color: #111;
+            padding: 10px;
+            font-size: 20px;
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #444;
+        }
+        #info-bar span {
+            width: 33.33%;
+        }
+        #info-left { text-align: left; }
+        #info-center { text-align: center; }
+        #info-right { text-align: right; }
+
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+
+    <div id="menu-container">
+        <h1>좀비 스네이크</h1>
+        <div class="menu-group">
+            <h2>캠페인 모드</h2>
+            <select id="stage-select"></select>
+            <button id="play-button" class="menu-button">플레이</button>
+        </div>
+        <div class="menu-group">
+            <h2>스페셜 모드</h2>
+            <button id="survival-button" class="menu-button">서바이벌</button>
+            <button id="time-attack-button" class="menu-button" style="margin-top:10px;">타임어택</button>
+        </div>
+    </div>
+
+    <!-- [수정됨] 게임 UI 구조 변경 -->
+    <div id="game-wrapper">
+        <div id="info-bar">
+            <span id="info-left"></span>
+            <span id="info-center"></span>
+            <span id="info-right"></span>
+        </div>
+        <canvas id="gameCanvas"></canvas>
+    </div>
+
+    <script>
+        // 1. 기본 설정
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const TILE_SIZE = 30;
+        const GRID_WIDTH = 22, GRID_HEIGHT = 22; // [수정됨] 맵 테두리를 포함한 전체 크기
+        canvas.width = TILE_SIZE * GRID_WIDTH;
+        canvas.height = TILE_SIZE * GRID_HEIGHT;
+        ctx.font = `${TILE_SIZE * 0.8}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        // [수정됨] 배경 이미지 로딩 경로 변경
+        const bgImage = new Image();
+        bgImage.src = 'img/bg_1_dark.png'; // 사용자가 요청한 로컬 경로로 변경
+
+
+        // 2. 게임 상태 변수
+        let gameState = 'menu';
+        let gameMode = 'campaign';
+        let stage, score, zombieBody, people, hunters, walls, direction, newDirection;
+        let gameLoopInterval, timerInterval;
+        let gameOverMessage = "", isWin = false, timer = 60;
+
+        const STAGE_CONFIG = {
+            1: { stationary: 5, moving: 0, hunters: 0, speed: 5 }, 2: { stationary: 3, moving: 2, hunters: 0, speed: 6 },
+            3: { stationary: 3, moving: 2, hunters: 3, speed: 7 }, 4: { stationary: 1, moving: 2, hunters: 4, speed: 8 },
+            5: { stationary: 0, moving: 3, hunters: 5, speed: 9 }, 6: { stationary: 0, moving: 3, hunters: 5, speed: 9 },
+            7: { stationary: 0, moving: 4, hunters: 6, speed: 9 }, 8: { stationary: 0, moving: 5, hunters: 6, speed: 9 }
+        };
+
+        // 3. 게임 시작/설정 함수
+        function initGame(mode, startStage = 1) {
+            gameMode = mode;
+            stage = startStage;
+            gameState = 'playing';
+            
+            if (gameLoopInterval) clearInterval(gameLoopInterval);
+            if (timerInterval) clearInterval(timerInterval);
+
+            if (gameMode === 'campaign') {
+                setupCampaignStage(stage, true);
+            } else {
+                setupSpecialMode();
+            }
+            
+            const speed = (gameMode === 'campaign') ? STAGE_CONFIG[stage]?.speed : 7;
+            gameLoopInterval = setInterval(gameLoop, 1000 / speed);
+
+            if (gameMode === 'timeAttack') {
+                timer = 60;
+                timerInterval = setInterval(() => {
+                    timer--;
+                    if (timer <= 0) {
+                        gameOver("TIME'S UP!", true);
+                    }
+                }, 1000);
+            }
+        }
+
+        function setupCampaignStage(currentStage, resetBody = false) {
+            if (resetBody) {
+                const bodyPartsToAdd = (currentStage - 1) * 3;
+                zombieBody = [{ x: 11, y: 11 }]; // 중앙에서 시작
+                for (let i = 0; i < bodyPartsToAdd; i++) zombieBody.push({ x: 11 - (i + 1), y: 11 });
+            }
+            people = []; hunters = []; walls = []; score = 0;
+            direction = 'right'; newDirection = 'right';
+
+            const config = STAGE_CONFIG[currentStage];
+            if (!config) return gameOver("INVALID STAGE");
+
+            for (let i = 0; i < config.stationary; i++) spawnPerson('stationary');
+            for (let i = 0; i < config.moving; i++) spawnPerson('moving');
+            for (let i = 0; i < config.hunters; i++) spawnHunterGroup();
+        }
+
+        function setupSpecialMode() {
+            zombieBody = [{ x: 11, y: 11 }];
+            people = []; hunters = []; walls = []; score = 0;
+            direction = 'right'; newDirection = 'right';
+
+            spawnWalls(7);
+            for (let i = 0; i < 9; i++) spawnPerson('moving');
+            for (let i = 0; i < 9; i++) spawnHunter();
+        }
+
+        // 4. 메인 게임 루프 및 업데이트
+        function gameLoop() { update(); draw(); }
+
+        function update() {
+            if (gameState !== 'playing') return;
+            direction = newDirection;
+            const head = { ...zombieBody[0] };
+
+            if (direction === 'right') head.x++; else if (direction === 'left') head.x--;
+            else if (direction === 'up') head.y--; else if (direction === 'down') head.y++;
+
+            // [수정됨] 충돌 판정 (맵 테두리 포함)
+            if (head.x < 1 || head.x >= GRID_WIDTH - 1 || head.y < 1 || head.y >= GRID_HEIGHT - 1) return gameOver("WALL CRASH! 💥");
+            if (zombieBody.slice(1).some(p => p.x === head.x && p.y === head.y)) return gameOver("SELF BITE! 😵");
+            if (walls.some(w => w.x === head.x && w.y === head.y)) return gameOver("WALL CRASH! 💥");
+            
+            let hunterCollision = false;
+            if (gameMode === 'campaign' && stage >= 3) {
+                for (const h of hunters) if (head.x >= h.x && head.x < h.x + 2 && head.y >= h.y && head.y < h.y + 2) hunterCollision = true;
+            } else {
+                if (hunters.some(h => h.x === head.x && h.y === head.y)) hunterCollision = true;
+            }
+            if (hunterCollision) return gameOver("HUNTER ATTACK! ☠️");
+            
+            zombieBody.unshift(head);
+
+            const personIndex = people.findIndex(p => p.x === head.x && p.y === head.y);
+            if (personIndex !== -1) {
+                score++;
+                people.splice(personIndex, 1);
+                if (gameMode !== 'campaign') spawnPerson('moving');
+            } else {
+                zombieBody.pop();
+            }
+
+            if (gameMode === 'campaign' && people.length === 0) {
+                const nextStage = stage + 1;
+                if (STAGE_CONFIG[nextStage]) {
+                    stage = nextStage;
+                    clearInterval(gameLoopInterval);
+                    setupCampaignStage(stage, false);
+                    const speed = STAGE_CONFIG[stage]?.speed || 7;
+                    gameLoopInterval = setInterval(gameLoop, 1000 / speed);
+                } else {
+                    gameOver("Welcome to Zombie World", true);
+                }
+            }
+            
+            people.forEach(p => { if (p.type === 'moving') movePerson(p, 0.3); });
+            if (gameMode !== 'campaign') hunters.forEach(h => moveSingleHunter(h, 0.2));
+            else if (stage >= 6) hunters.forEach(h => moveHunterGroup(h, 0.15));
+        }
+        
+        // 5. 그리기 함수
+        function draw() {
+            if (gameState.startsWith('play') || gameState === 'gameOver' || gameState === 'paused') {
+                updateInfoBar();
+                drawGame();
+            }
+            if (gameState === 'paused') drawPausedScreen();
+            else if (gameState === 'gameOver') drawGameOverScreen();
+        }
+
+        function drawGame() {
+            // [수정됨] 배경 이미지를 캔버스 크기에 맞게 그리기
+            if (bgImage.complete && bgImage.naturalHeight !== 0) {
+                ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+            } else {
+                ctx.fillStyle = '#2d3436';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+            
+            // [수정됨] 맵 테두리 그리기 및 이모지 변경
+            const borderEmoji = '⬛'; // 검은 벽 이모지
+            // 위쪽 및 아래쪽 테두리
+            for (let x = 0; x < GRID_WIDTH; x++) {
+                ctx.fillText(borderEmoji, x * TILE_SIZE + TILE_SIZE / 2, 0 * TILE_SIZE + TILE_SIZE / 2); // 위
+                ctx.fillText(borderEmoji, x * TILE_SIZE + TILE_SIZE / 2, (GRID_HEIGHT - 1) * TILE_SIZE + TILE_SIZE / 2); // 아래
+            }
+            // 왼쪽 및 오른쪽 테두리
+            for (let y = 1; y < GRID_HEIGHT - 1; y++) {
+                ctx.fillText(borderEmoji, 0 * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2); // 왼쪽
+                ctx.fillText(borderEmoji, (GRID_WIDTH - 1) * TILE_SIZE + TILE_SIZE / 2, y * TILE_SIZE + TILE_SIZE / 2); // 오른쪽
+            }
+
+            walls.forEach(w => ctx.fillText('🧱', w.x * TILE_SIZE + TILE_SIZE / 2, w.y * TILE_SIZE + TILE_SIZE / 2));
+            if (gameMode === 'campaign' && stage >= 3) {
+                hunters.forEach(h => { for (let i = 0; i < 2; i++) for (let j = 0; j < 2; j++) ctx.fillText('👹', (h.x + i) * TILE_SIZE + TILE_SIZE / 2, (h.y + j) * TILE_SIZE + TILE_SIZE / 2); });
+            } else {
+                hunters.forEach(h => ctx.fillText('👹', h.x * TILE_SIZE + TILE_SIZE / 2, h.y * TILE_SIZE + TILE_SIZE / 2));
+            }
+            people.forEach(p => { const emoji = p.type === 'stationary' ? '🤕' : '🧑'; ctx.fillText(emoji, p.x * TILE_SIZE + TILE_SIZE / 2, p.y * TILE_SIZE + TILE_SIZE / 2); });
+            zombieBody.forEach((part, index) => ctx.fillText(index === 0 ? '🧟' : '💀', part.x * TILE_SIZE + TILE_SIZE / 2, part.y * TILE_SIZE + TILE_SIZE / 2));
+        }
+
+        function updateInfoBar() {
+            const infoLeft = document.getElementById('info-left');
+            const infoCenter = document.getElementById('info-center');
+            const infoRight = document.getElementById('info-right');
+
+            if (gameMode === 'campaign') {
+                infoLeft.textContent = `Stage: ${stage}`;
+                infoCenter.textContent = `속도: ${STAGE_CONFIG[stage]?.speed}`;
+                infoRight.textContent = `남은 주민: ${people.length}`;
+            } else {
+                infoLeft.textContent = `Mode: ${gameMode}`;
+                infoCenter.textContent = (gameMode === 'timeAttack') ? `Time: ${timer}` : `Score: ${score}`;
+                infoRight.textContent = `Length: ${zombieBody.length}`;
+            }
+        }
+
+        function drawGameOverScreen() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white'; ctx.textAlign = 'center';
+            if (!isWin) {
+                ctx.font = '40px sans-serif'; ctx.fillText("GAME OVER", canvas.width / 2, canvas.height / 2 - 60);
+            }
+            ctx.font = '30px sans-serif';
+            const messageY = isWin ? canvas.height / 2 - 30 : canvas.height / 2;
+            ctx.fillText(gameOverMessage, canvas.width / 2, messageY);
+            if (gameMode !== 'campaign') {
+                ctx.font = '24px sans-serif';
+                ctx.fillText(`Your Score: ${score}`, canvas.width / 2, messageY + 40);
+            }
+            ctx.font = '20px sans-serif';
+            ctx.fillText('Press Enter to Return to Menu', canvas.width / 2, canvas.height / 2 + 80);
+        }
+
+        function drawPausedScreen() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'white'; ctx.font = '50px sans-serif'; ctx.textAlign = 'center';
+            ctx.fillText('PAUSED', canvas.width / 2, canvas.height / 2);
+        }
+
+        // 6. 보조 함수
+        function getOccupiedCoords() {
+            const all = [...zombieBody, ...people, ...walls];
+            // 테두리 벽 추가
+            for(let i=0; i<GRID_WIDTH; i++) { all.push({x:i, y:0}); all.push({x:i, y:GRID_HEIGHT-1}); }
+            for(let i=1; i<GRID_HEIGHT-1; i++) { all.push({x:0, y:i}); all.push({x:GRID_WIDTH-1, y:i}); }
+            
+            if (gameMode === 'campaign' && stage >= 3) {
+                hunters.forEach(h => { for(let i=0;i<2;i++) for(let j=0;j<2;j++) all.push({x:h.x+i, y:h.y+j}) });
+            } else {
+                all.push(...hunters);
+            }
+            return all;
+        }
+
+        function spawnPerson(type) { people.push({ ...getRandomCoords(getOccupiedCoords()), type }); }
+        function spawnHunter() { hunters.push(getRandomCoords(getOccupiedCoords())); }
+        function spawnHunterGroup() {
+            let coords;
+            do {
+                coords = { x: Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1, y: Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1 };
+            } while (isAreaOccupied(coords.x, coords.y, 2, 2, getOccupiedCoords()));
+            hunters.push(coords);
+        }
+        function spawnWalls(count) {
+            for (let i = 0; i < count; i++) {
+                const length = Math.floor(Math.random() * 3) + 3;
+                const isHorizontal = Math.random() < 0.5;
+                let start;
+                do {
+                    start = {
+                        x: Math.floor(Math.random() * (GRID_WIDTH - (isHorizontal ? length : 1) - 2)) + 1,
+                        y: Math.floor(Math.random() * (GRID_HEIGHT - (isHorizontal ? 1 : length) - 2)) + 1
+                    };
+                } while (isAreaOccupied(start.x, start.y, isHorizontal ? length : 1, isHorizontal ? 1 : length, getOccupiedCoords()));
+                
+                for (let j = 0; j < length; j++) {
+                    walls.push({ x: start.x + (isHorizontal ? j : 0), y: start.y + (isHorizontal ? 0 : j) });
+                }
+            }
+        }
+        function isAreaOccupied(x, y, w, h, occupied) {
+            for (let i = x; i < x + w; i++) for (let j = y; j < y + h; j++) if (occupied.some(o => o.x === i && o.y === j)) return true;
+            return false;
+        }
+        function getRandomCoords(occupied) {
+            let x, y;
+            do {
+                x = Math.floor(Math.random() * (GRID_WIDTH - 2)) + 1;
+                y = Math.floor(Math.random() * (GRID_HEIGHT - 2)) + 1;
+            } while (occupied.some(o => o.x === x && o.y === y));
+            return { x, y };
+        }
+        
+        function movePerson(person, probability) {
+            if (Math.random() > probability) return;
+            const move = Math.floor(Math.random() * 4);
+            let nextX = person.x, nextY = person.y;
+            if (move === 0) nextX++; else if (move === 1) nextX--;
+            else if (move === 2) nextY++; else nextY--;
+
+            if (isAreaOccupied(nextX, nextY, 1, 1, getOccupiedCoords())) return;
+            
+            person.x = nextX;
+            person.y = nextY;
+        }
+
+        function moveSingleHunter(hunter, probability) {
+            if (Math.random() > probability) return;
+            const move = Math.floor(Math.random() * 4);
+            let nextX = hunter.x, nextY = hunter.y;
+            if (move === 0) nextX++; else if (move === 1) nextX--;
+            else if (move === 2) nextY++; else nextY--;
+
+            if (isAreaOccupied(nextX, nextY, 1, 1, getOccupiedCoords())) return;
+
+            hunter.x = nextX;
+            hunter.y = nextY;
+        }
+        
+        function moveHunterGroup(hunterGroup, probability) {
+            if (Math.random() > probability) return;
+            const move = Math.floor(Math.random() * 4);
+            let nextX = hunterGroup.x, nextY = hunterGroup.y;
+            if (move === 0) nextX++; else if (move === 1) nextX--;
+            else if (move === 2) nextY++; else nextY--;
+
+            if (isAreaOccupied(nextX, nextY, 2, 2, getOccupiedCoords())) return;
+            
+            hunterGroup.x = nextX;
+            hunterGroup.y = nextY;
+        }
+
+        function gameOver(message, win = false) {
+            gameState = 'gameOver'; isWin = win; gameOverMessage = message;
+            clearInterval(gameLoopInterval); clearInterval(timerInterval);
+            draw();
+        }
+        function pauseGame() {
+            if (gameState !== 'playing') return; gameState = 'paused';
+            clearInterval(gameLoopInterval); if (gameMode === 'timeAttack') clearInterval(timerInterval);
+            draw();
+        }
+        function resumeGame() {
+            if (gameState !== 'playing') return; gameState = 'playing';
+            const speed = (gameMode === 'campaign') ? STAGE_CONFIG[stage]?.speed : 7;
+            gameLoopInterval = setInterval(gameLoop, 1000 / speed);
+            if (gameMode === 'timeAttack') {
+                timerInterval = setInterval(() => {
+                    timer--; if (timer <= 0) gameOver("TIME'S UP!", true);
+                }, 1000);
+            }
+        }
+
+        // 7. UI 및 키보드 이벤트 리스너
+        document.addEventListener('keydown', e => {
+            const key = e.key.toLowerCase();
+            if (gameState === 'playing') {
+                if (key === 'arrowup' && direction !== 'down') newDirection = 'up';
+                else if (key === 'arrowdown' && direction !== 'up') newDirection = 'down';
+                else if (key === 'arrowleft' && direction !== 'right') newDirection = 'left';
+                else if (key === 'arrowright' && direction !== 'left') newDirection = 'right';
+                else if (key === 'p') pauseGame();
+            } else if (gameState === 'paused') {
+                if (key === 'p') resumeGame();
+            } else if (gameState === 'gameOver') {
+                if (key === 'enter') {
+                    document.getElementById('game-wrapper').style.display = 'none';
+                    document.getElementById('menu-container').style.display = 'flex';
+                    gameState = 'menu';
+                }
+            }
+        });
+
+        const menuContainer = document.getElementById('menu-container');
+        const gameWrapper = document.getElementById('game-wrapper');
+        const stageSelect = document.getElementById('stage-select');
+        for (const stageNum in STAGE_CONFIG) {
+            const option = document.createElement('option');
+            option.value = stageNum; option.textContent = `Stage ${stageNum}`;
+            stageSelect.appendChild(option);
+        }
+        
+        function setupButton(id, mode, stage = 1) {
+            document.getElementById(id).addEventListener('click', () => {
+                menuContainer.style.display = 'none';
+                gameWrapper.style.display = 'block';
+                initGame(mode, stage);
+            });
+        }
+        setupButton('play-button', 'campaign', parseInt(stageSelect.value));
+        stageSelect.addEventListener('change', (e) => {
+             document.getElementById('play-button').onclick = () => {
+                const selectedStage = parseInt(e.target.value);
+                menuContainer.style.display = 'none';
+                gameWrapper.style.display = 'block';
+                initGame('campaign', selectedStage);
+            };
+        });
+        setupButton('survival-button', 'survival');
+        setupButton('time-attack-button', 'timeAttack');
+    </script>
+</body>
+</html>
