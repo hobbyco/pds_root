@@ -17,7 +17,7 @@
     <!-- SEO - Basic Meta Tags -->
     <title>pdongsoo의 바이브 코딩 - 미니게임</title>
     <meta name="description" content="pdongsoo의 바이브 코딩 자료실에서 제공하는 간단한 미니게임들을 즐겨보세요.">
-    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 유물 사냥꾼, 간단한 게임">
+    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 유물 사냥꾼, 좀비 스네이크, 간단한 게임">
     <meta name="author" content="pdongsoo">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -43,6 +43,9 @@
         }
         .card-border-amber {
             border-top-color: #f59e0b; /* Amber color for treasure */
+        }
+        .card-border-lime {
+            border-top-color: #84cc16; /* Lime color for zombie snake */
         }
         .gradient-text {
             background: linear-gradient(to right, #8b5cf6, #ec4899);
@@ -122,6 +125,25 @@
                         <h2 class="text-2xl font-bold text-gray-800">유물 사냥꾼과 시간의 저주</h2>
                         <!-- 카드 높이를 맞추기 위해 줄바꿈과 공백 문자를 추가합니다. -->
                         <p class="text-gray-500 mt-2">유물을 찾아 저주를 풀어보세요!<br>&nbsp;</p>
+                    </a>
+                </article>
+
+                <!-- 좀비 스네이크 게임 카드 -->
+                <article class="flex">
+                    <a href="https://hobbyco.github.io/pds_root/mini_games/zombie_snake/index.html"
+                       class="link-card card-border-lime block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
+                        <div class="flex justify-center mb-4">
+                            <svg class="w-12 h-12 text-lime-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <title>좀비 스네이크 아이콘</title>
+                                <path d="M10 8.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
+                                <path d="M14.5 8.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0Z"/>
+                                <path d="M2 12s2-4 6-4 6 4 6 4-2 4-6 4-6-4-6-4Z"/>
+                                <path d="M14 12s2-4 6-4"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">좀비 스네이크 (pc only)</h2>
+                        <!-- 카드 높이를 맞추기 위해 줄바꿈과 공백 문자를 추가합니다. -->
+                        <p class="text-gray-500 mt-2">나는 좀비인가, 뱀인가<br>&nbsp;</p>
                     </a>
                 </article>
 
