@@ -26,8 +26,23 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: flex-end;
             gap: 20px;
             text-align: center;
+            width: 100%;
+            height: 100%;
+            background-image: url('img/open_gemini_origin.png');
+            background-size: contain; /* [수정됨] 이미지가 잘리지 않고 전체가 보이도록 변경 */
+            background-position: center;
+            background-repeat: no-repeat;
+            padding-bottom: 5vh;
+            box-sizing: border-box;
+        }
+        /* 모바일 세로 모드에서는 꽉 차게 보이도록 cover 유지 */
+        @media (orientation: portrait) {
+            #menu-container {
+                background-size: cover;
+            }
         }
         h1 {
             font-family: 'Creepster', cursive;
@@ -35,13 +50,15 @@
             color: #2ecc71;
             margin-bottom: 10px;
             letter-spacing: 5px;
+            text-shadow: 3px 3px 0 #000;
         }
         .menu-group {
-            border: 1px solid #444;
+            border: 1px solid rgba(255, 255, 255, 0.2);
             padding: 20px;
             border-radius: 10px;
             margin-bottom: 15px;
             width: 300px;
+            background-color: rgba(0, 0, 0, 0.6);
         }
         .menu-group h2 {
             margin-top: 0;
@@ -52,19 +69,20 @@
             font-size: 20px;
             padding: 12px 0;
             border-radius: 5px;
-            border: none;
             color: white;
             cursor: pointer;
-            transition: background-color 0.2s;
+            transition: background-color 0.2s, color 0.2s;
             width: 90%;
             margin-top: 10px;
+            background-color: transparent;
+            border: 2px solid;
         }
-        #easy-mode-button { background-color: #27ae60; }
-        #easy-mode-button:hover { background-color: #2ecc71; }
-        #survival-button { background-color: #e67e22; }
-        #survival-button:hover { background-color: #f39c12; }
-        #time-attack-button { background-color: #c0392b; }
-        #time-attack-button:hover { background-color: #e74c3c; }
+        #easy-mode-button { border-color: #27ae60; }
+        #easy-mode-button:hover { background-color: #27ae60; }
+        #survival-button { border-color: #e67e22; }
+        #survival-button:hover { background-color: #e67e22; }
+        #time-attack-button { border-color: #c0392b; }
+        #time-attack-button:hover { background-color: #c0392b; }
 
         #game-wrapper { 
             display: none;
@@ -112,7 +130,7 @@
             flex-direction: column;
             align-items: center;
             gap: 15px;
-            margin-top: 80px; /* [수정됨] 메시지와의 간격을 더 확보 */
+            margin-top: 80px;
         }
         .game-over-btn {
             font-size: 18px;
@@ -131,7 +149,7 @@
 <body>
 
     <div id="menu-container">
-        <h1>Zombie Snake</h1>
+        <!-- <h1>Zombie Snake</h1> -->
         <div class="menu-group">
             <h2>모드 선택</h2>
             <button id="easy-mode-button" class="menu-button">이지 모드</button>
@@ -366,7 +384,7 @@
             ctx.fillStyle = 'rgba(0, 0, 0, 0.7)'; ctx.fillRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = 'white'; ctx.textAlign = 'center';
             
-            const baseY = canvas.height / 2 - 60; // [수정됨] 메시지 기준 높이를 더 위로 올림
+            const baseY = canvas.height / 2 - 60;
 
             if (!isWin) {
                 ctx.font = '40px sans-serif'; 
@@ -550,7 +568,7 @@
 
         window.addEventListener('resize', resizeCanvas);
         
-        // 최종 업데이트: 2025-07-30 21:40 (KST)
+        // 최종 업데이트: 2025-07-30 23:16 (KST)
     </script>
 </body>
 </html>
