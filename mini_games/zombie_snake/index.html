@@ -40,20 +40,20 @@
             cursor: pointer;
             justify-content: space-between;
             padding: 10vh 0;
-            background-size: contain; /* [수정됨] 이미지가 잘리지 않도록 contain으로 변경 */
+            background-size: contain;
         }
         #synopsis {
-            font-family: 'Creepster', cursive; /* [수정됨] 폰트 변경 */
-            font-size: 3.5vh; /* [수정됨] 글씨 크기 증가 */
+            font-family: 'Creepster', cursive;
+            font-size: 3.5vh;
             line-height: 1.6;
             color: #ddd;
             text-shadow: 2px 2px 4px #000;
             max-width: 80%;
-            letter-spacing: 2px; /* [추가됨] 글자 간격 */
+            letter-spacing: 2px;
         }
         #start-prompt {
             font-family: 'Creepster', cursive;
-            font-size: 4vh; /* [수정됨] 글씨 크기 증가 */
+            font-size: 4vh;
             color: #f1c40f;
             text-shadow: 2px 2px 4px #000;
             animation: blink 1.5s linear infinite;
@@ -71,7 +71,7 @@
             padding-bottom: 5vh;
         }
         @media (orientation: portrait) {
-            #menu-container {
+            #opening-container, #menu-container {
                 background-size: cover;
             }
         }
@@ -92,11 +92,14 @@
         }
         .menu-group h2 {
             margin-top: 0;
-            font-size: 22px;
+            font-size: 28px;
             color: #f1c40f;
+            font-family: 'Creepster', cursive;
+            letter-spacing: 2px;
         }
         .menu-button {
-            font-size: 20px;
+            font-family: 'Creepster', cursive;
+            font-size: 24px;
             padding: 12px 0;
             border-radius: 5px;
             border: none;
@@ -105,6 +108,7 @@
             transition: background-color 0.2s;
             width: 90%;
             margin-top: 10px;
+            letter-spacing: 2px;
         }
         #easy-mode-button { background-color: #27ae60; }
         #easy-mode-button:hover { background-color: #2ecc71; }
@@ -162,7 +166,9 @@
             margin-top: 80px;
         }
         .game-over-btn {
-            font-size: 18px;
+            font-family: 'Creepster', cursive;
+            font-size: 22px;
+            letter-spacing: 2px;
             padding: 10px 25px;
             border-radius: 5px;
             border: 1px solid white;
@@ -172,6 +178,88 @@
         }
         #restart-button { background-color: #27ae60; }
         #main-menu-button { background-color: #7f8c8d; }
+
+        /* [수정됨] 가상 조이스틱 전체 스타일 */
+        #virtual-controls {
+            display: none;
+            padding: 20px 0;
+            user-select: none;
+            -webkit-user-select: none;
+            width: 100%;
+            background-color: #c0c0c0; /* 게임보이 회색 */
+            box-shadow: inset 0 5px 10px rgba(0,0,0,0.2);
+        }
+        .controls-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+        }
+        .dpad {
+            width: 150px;
+            height: 150px;
+            position: relative;
+        }
+        .dpad-btn {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-color: #333;
+            color: white;
+            font-size: 24px;
+            border-radius: 8px;
+            border-top: 1px solid #555;
+            border-left: 1px solid #555;
+            border-right: 1px solid #111;
+            border-bottom: 1px solid #111;
+        }
+        .dpad-btn:active {
+            background-color: #555;
+            border-top: 1px solid #111;
+            border-left: 1px solid #111;
+        }
+        #btn-up { top: 0; left: 50px; }
+        #btn-left { top: 50px; left: 0; }
+        #btn-right { top: 50px; left: 100px; }
+        #btn-down { top: 100px; left: 50px; }
+        
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        .action-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #a02040;
+            border-top: 1px solid #c04060;
+            border-left: 1px solid #c04060;
+            border-right: 1px solid #800020;
+            border-bottom: 1px solid #800020;
+        }
+
+        /* 모바일 세로 모드에서만 게임보이 레이아웃 적용 */
+        @media (orientation: portrait) {
+            #game-wrapper {
+                background-color: #c0c0c0; /* 게임보이 회색 */
+            }
+            #virtual-controls {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
+            #canvas-container {
+                padding-bottom: 0;
+            }
+            #info-bar {
+                border-radius: 5px 5px 0 0;
+            }
+            canvas {
+                border-radius: 0 0 5px 5px;
+            }
+        }
 
     </style>
 </head>
@@ -189,11 +277,11 @@
 
     <div id="menu-container" class="container">
         <div class="menu-group">
-            <h2>모드 선택</h2>
-            <button id="easy-mode-button" class="menu-button">이지 모드</button>
-            <button id="survival-button" class="menu-button">서바이벌 모드</button>
+            <h2>Select Mode</h2>
+            <button id="easy-mode-button" class="menu-button">Easy Mode</button>
+            <button id="survival-button" class="menu-button">Survival Mode</button>
         </div>
-        <a id="developer-link" href="https://hobbyco.github.io/pds_root/index.html" target="_blank">개발자 홈페이지 바로가기</a>
+        <a id="developer-link" href="https://hobbyco.github.io/pds_root/index.html" target="_blank">Developer's Homepage</a>
     </div>
 
     <div id="game-wrapper">
@@ -206,8 +294,22 @@
             <canvas id="gameCanvas"></canvas>
         </div>
         <div id="game-over-buttons">
-            <button id="restart-button" class="game-over-btn">다시 시작</button>
-            <button id="main-menu-button" class="game-over-btn">메인 메뉴</button>
+            <button id="restart-button" class="game-over-btn">Restart</button>
+            <button id="main-menu-button" class="game-over-btn">Main Menu</button>
+        </div>
+        <div id="virtual-controls">
+            <div class="controls-container">
+                <div class="dpad">
+                    <button id="btn-up" class="dpad-btn">▲</button>
+                    <button id="btn-left" class="dpad-btn">◀</button>
+                    <button id="btn-right" class="dpad-btn">▶</button>
+                    <button id="btn-down" class="dpad-btn">▼</button>
+                </div>
+                <div class="action-buttons">
+                    <div class="action-btn"></div>
+                    <div class="action-btn"></div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -411,14 +513,14 @@
             const baseY = canvas.height / 2 - 60;
 
             if (!isWin) {
-                ctx.font = '40px sans-serif'; 
+                ctx.font = `50px 'Creepster', cursive`;
                 ctx.fillText("GAME OVER", canvas.width / 2, baseY - 50);
             }
-            ctx.font = '30px sans-serif';
+            ctx.font = `35px 'Creepster', cursive`;
             const messageY = isWin ? baseY - 20 : baseY;
             ctx.fillText(gameOverMessage, canvas.width / 2, messageY);
-            ctx.font = '24px sans-serif';
-            ctx.fillText(`Your Score: ${score}`, canvas.width / 2, messageY + 40);
+            ctx.font = `30px 'Creepster', cursive`;
+            ctx.fillText(`Your Score: ${score}`, canvas.width / 2, messageY + 45);
         }
 
         function drawPausedScreen() {
@@ -524,49 +626,35 @@
         }
 
         // 7. UI 및 입력 처리
+        function handleDirectionChange(newDir) {
+            if (gameState !== 'playing') return;
+            if (newDir === 'up' && direction !== 'down') newDirection = 'up';
+            else if (newDir === 'down' && direction !== 'up') newDirection = 'down';
+            else if (newDir === 'left' && direction !== 'right') newDirection = 'left';
+            else if (newDir === 'right' && direction !== 'left') newDirection = 'right';
+        }
+
         document.addEventListener('keydown', e => {
             const key = e.key.toLowerCase();
             if (gameState === 'playing') {
-                if (key === 'arrowup' && direction !== 'down') newDirection = 'up';
-                else if (key === 'arrowdown' && direction !== 'up') newDirection = 'down';
-                else if (key === 'arrowleft' && direction !== 'right') newDirection = 'left';
-                else if (key === 'arrowright' && direction !== 'left') newDirection = 'right';
+                const keyMap = {'arrowup': 'up', 'arrowdown': 'down', 'arrowleft': 'left', 'arrowright': 'right'};
+                if (keyMap[key]) handleDirectionChange(keyMap[key]);
                 else if (key === 'p') pauseGame();
             } else if (gameState === 'paused') {
                 if (key === 'p') resumeGame();
             } else if (gameState === 'gameOver') {
-                if (key === 'enter') {
-                    document.getElementById('restart-button').click();
-                }
+                if (key === 'enter') document.getElementById('restart-button').click();
             }
         });
 
-        canvas.addEventListener('touchstart', e => {
-            e.preventDefault();
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-        }, { passive: false });
-
-        canvas.addEventListener('touchend', e => {
-            e.preventDefault();
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-            handleSwipe(touchEndX, touchEndY);
-        }, { passive: false });
+        canvas.addEventListener('touchstart', e => { e.preventDefault(); touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; }, { passive: false });
+        canvas.addEventListener('touchend', e => { e.preventDefault(); handleSwipe(e.changedTouches[0].clientX, e.changedTouches[0].clientY); }, { passive: false });
 
         function handleSwipe(endX, endY) {
-            const diffX = endX - touchStartX;
-            const diffY = endY - touchStartY;
-            const absDiffX = Math.abs(diffX);
-            const absDiffY = Math.abs(diffY);
-            if (Math.max(absDiffX, absDiffY) < 30) return;
-            if (absDiffX > absDiffY) {
-                if (diffX > 0 && direction !== 'left') newDirection = 'right';
-                else if (diffX < 0 && direction !== 'right') newDirection = 'left';
-            } else {
-                if (diffY > 0 && direction !== 'up') newDirection = 'down';
-                else if (diffY < 0 && direction !== 'down') newDirection = 'up';
-            }
+            const diffX = endX - touchStartX; const diffY = endY - touchStartY;
+            if (Math.max(Math.abs(diffX), Math.abs(diffY)) < 30) return;
+            if (Math.abs(diffX) > Math.abs(diffY)) handleDirectionChange(diffX > 0 ? 'right' : 'left');
+            else handleDirectionChange(diffY > 0 ? 'down' : 'up');
         }
 
         const openingContainer = document.getElementById('opening-container');
@@ -590,20 +678,31 @@
             initGame('survival');
         });
 
-        document.getElementById('restart-button').addEventListener('click', () => {
-            initGame(gameMode);
-        });
-
+        document.getElementById('restart-button').addEventListener('click', () => initGame(gameMode));
         document.getElementById('main-menu-button').addEventListener('click', () => {
             gameWrapper.style.display = 'none';
             menuContainer.style.display = 'flex';
             document.getElementById('game-over-buttons').style.display = 'none';
             gameState = 'menu';
         });
+        
+        const setupButtonListener = (id, dir) => {
+            const button = document.getElementById(id);
+            const handler = (e) => {
+                e.preventDefault();
+                handleDirectionChange(dir);
+            };
+            button.addEventListener('click', handler);
+            button.addEventListener('touchstart', handler, { passive: false });
+        };
+        setupButtonListener('btn-up', 'up');
+        setupButtonListener('btn-down', 'down');
+        setupButtonListener('btn-left', 'left');
+        setupButtonListener('btn-right', 'right');
 
         window.addEventListener('resize', resizeCanvas);
         
-        // 최종 업데이트: 2025-08-01 18:40 (KST)
+        // 최종 업데이트: 2025-08-01 23:55 (KST)
     </script>
 </body>
 </html>
