@@ -78,8 +78,8 @@
         
         /* 흰 박스 내부에 들어간 푸터 스타일 */
         .opening-container #footer-placeholder {
-            margin-top: 30px;
-            padding-top: 25px;
+            margin-top: 15px;
+            padding-top: 15px;
             border-top: 1px solid #e9ecef; /* 구분선 추가 */
         }
 
@@ -865,7 +865,7 @@
                 <div class="title-text">볼더링 2048</div>
             </div>
             
-            <div class="subtitle">클라이밍 그레이드를 정복하라!!!</div>
+            <div class="subtitle">클라이밍 그레이드를 정복하라!!</div>
             
             <div class="best-score-display">
                 <div class="best-score-label">최고 점수</div>
@@ -874,7 +874,7 @@
             
             <div class="opening-buttons">
                 <button class="opening-btn" onclick="gameStart()">
-                    🎯 새 게임 시작
+                    � 새 게임 시작
                 </button>
                 
                 <div class="bonus-card-toggle">
@@ -1252,7 +1252,7 @@
             const bonusInfo = getBonusInfo(bonusType);
             icon.textContent = bonusInfo.icon;
             title.textContent = bonusInfo.title;
-            description.textContent = bonusInfo.description;
+            description.innerHTML = bonusInfo.description;
             
             if (bonusType === 'crux') {
                 question.textContent = '크럭스가 자동으로 발동됩니다!';
@@ -1299,7 +1299,7 @@
                 shuffle_card: {
                     icon: '🎲',
                     title: '무작위 재배치 카드!',
-                    description: '무작위로 게임 타일을 섞을 수 있습니다 /n (나중에 사용 가능)'
+                    description: '무작위로 게임 타일을 섞을 수 있습니다<br>(나중에 사용 가능)'
                 },
                 crux: {
                     icon: '🪨',
@@ -2135,3 +2135,4 @@
     </script>
 </body>
 </html>
+�
