@@ -37,7 +37,7 @@
             color: #333;
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 이전 상태로 복원 */
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
             padding: 10px;
@@ -54,11 +54,10 @@
             background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%);
             display: flex;
             flex-direction: column;
-            justify-content: center; /* 중앙 컨텐츠를 위로 밀기 위해 flex-start로 변경 가능하나, auto margin으로 처리 */
+            justify-content: center;
             align-items: center;
             z-index: 2000;
             animation: openingFadeIn 1s ease-in-out;
-            padding: 20px 0; /* 푸터 공간 확보를 위한 패딩 */
         }
 
         .opening-screen.hidden {
@@ -77,10 +76,11 @@
             animation: openingSlideUp 0.8s ease-out 0.2s both;
         }
         
-        /* 푸터를 오프닝 화면 하단에 고정시키는 스타일 추가 */
-        #footer-placeholder {
-            width: 100%;
-            margin-top: auto; /* 이 속성이 푸터를 아래로 밀어냅니다 */
+        /* 흰 박스 내부에 들어간 푸터 스타일 */
+        .opening-container #footer-placeholder {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e9ecef; /* 구분선 추가 */
         }
 
 
@@ -865,7 +865,7 @@
                 <div class="title-text">볼더링 2048</div>
             </div>
             
-            <div class="subtitle">클라이밍 그레이드를 정복하라!!</div>
+            <div class="subtitle">클라이밍 그레이드를 정복하라!!!</div>
             
             <div class="best-score-display">
                 <div class="best-score-label">최고 점수</div>
@@ -889,9 +889,9 @@
                     📖 가이드 보기
                 </button>
             </div>
+            
+            <div id="footer-placeholder"></div>
         </div>
-        
-        <div id="footer-placeholder"></div>
     </div>
 
     <div class="guide-screen" id="guide-screen">
@@ -1167,7 +1167,7 @@
                 message.textContent = '4가지 스킬을 모두 마스터했습니다! 당신은 진정한 볼더링 고수입니다!';
             } else {
                 title.textContent = '세션 종료';
-                message.textContent = '더 이상 홀드를 잡을 수 없습니다. <br> 다시 도전해보세요!';
+                message.textContent = '더 이상 홀드를 잡을 수 없습니다. 다시 도전해보세요!';
             }
             
             finalScore.textContent = score;
@@ -1299,7 +1299,7 @@
                 shuffle_card: {
                     icon: '🎲',
                     title: '무작위 재배치 카드!',
-                    description: '무작위로 게임 타일을 섞을 수 있습니다 <br> (나중에 사용 가능)'
+                    description: '무작위로 게임 타일을 섞을 수 있습니다 /n (나중에 사용 가능)'
                 },
                 crux: {
                     icon: '🪨',
