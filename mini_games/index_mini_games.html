@@ -17,7 +17,7 @@
     <!-- SEO - Basic Meta Tags -->
     <title>pdongsoo의 바이브 코딩 - 미니게임</title>
     <meta name="description" content="pdongsoo의 바이브 코딩 자료실에서 제공하는 간단한 미니게임들을 즐겨보세요.">
-    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 유물 사냥꾼, 좀비 스네이크, 간단한 게임">
+    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 유물 사냥꾼, 좀비 스네이크, 클라이밍 2048, 간단한 게임">
     <meta name="author" content="pdongsoo">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -46,6 +46,9 @@
         }
         .card-border-lime {
             border-top-color: #84cc16; /* Lime color for zombie snake */
+        }
+        .card-border-cyan {
+            border-top-color: #06b6d4; /* Cyan color for 2048 game */
         }
         .gradient-text {
             background: linear-gradient(to right, #8b5cf6, #ec4899);
@@ -147,6 +150,19 @@
                     </a>
                 </article>
 
+                <!-- 클라이밍 2048 게임 카드 -->
+                <article class="flex">
+                    <a href="https://hobbyco.github.io/pds_root/mini_games/climbing_2048/index.html"
+                       class="link-card card-border-cyan block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
+                        <div class="flex justify-center mb-4">
+                            <i data-lucide="blocks" class="w-12 h-12 text-cyan-500"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">클라이밍 2048</h2>
+                        <!-- 카드 높이를 맞추기 위해 줄바꿈과 공백 문자를 추가합니다. -->
+                        <p class="text-gray-500 mt-2">같은 홀드를 합쳐<br>새로운 홀드를 만드세요!</p>
+                    </a>
+                </article>
+
             </div>
         </section>
     </main>
@@ -189,4 +205,5 @@
     </script>
 
 </body>
+<!-- Last updated: 2025-08-19 12:39 KST -->
 </html>
