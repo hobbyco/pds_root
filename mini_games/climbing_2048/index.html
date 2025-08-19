@@ -1,0 +1,2166 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>볼더링 2048 - 클라이밍 2048 게임</title>
+
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="클라이밍 테마의 2048 퍼즐 게임, 볼더링 2048! V0부터 V7+까지 클라이밍 그레이드를 합치고 4가지 스킬을 모아 볼더링 마스터가 되어보세요.">
+    <meta name="keywords" content="2048, 클라이밍, 볼더링, 퍼즐 게임, 웹게임, 2048 게임, climbing, bouldering, puzzle game">
+    
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="볼더링 2048 - 클라이밍 2048 게임">
+    <meta property="og:description" content="V0부터 V7+까지 클라이밍 그레이드를 합쳐 볼더링 마스터에 도전하세요!">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content=""> <!-- 실제 게임 URL을 여기에 입력하세요 -->
+    <meta property="og:image" content=""> <!-- 게임 미리보기 이미지 URL을 여기에 입력하세요 -->
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFCTS5DZ6V"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-KFCTS5DZ6V');
+    </script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif; /* 폰트를 좀 더 부드럽게 변경 */
+            background: #f0f2f5; /* 밝은 회색 배경 */
+            color: #333; /* 기본 텍스트 색상을 어둡게 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        /* 오프닝화면 스타일 */
+        .opening-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%); /* 부드럽고 밝은 그라데이션 */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            animation: openingFadeIn 1s ease-in-out;
+        }
+
+        .opening-screen.hidden {
+            display: none;
+        }
+
+        .opening-container {
+            background: #ffffff; /* 흰색 배경 */
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+            border: 1px solid #e0e0e0;
+            max-width: 400px;
+            width: 90%;
+            animation: openingSlideUp 0.8s ease-out 0.2s both;
+        }
+
+        .opening-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .climbing-icon {
+            font-size: 3em;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            border-radius: 15px;
+            padding: 15px;
+            color: white; /* 아이콘 색상 추가 */
+            box-shadow: 0 10px 25px rgba(254, 202, 87, 0.3);
+        }
+
+        .title-text {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #4a4a4a, #212121); /* 심플하고 강렬한 텍스트 색상 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: none; /* 텍스트 그림자 제거 */
+            letter-spacing: 1px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            color: #555; /* 어두운 회색으로 변경 */
+            font-weight: normal;
+        }
+
+        .best-score-display {
+            background: #f7f9fa; /* 밝은 회색 배경 */
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px 0;
+            border: 1px solid #e0e6ed;
+        }
+
+        .best-score-label {
+            font-size: 0.9em;
+            color: #6c757d; /* 회색으로 변경 */
+            margin-bottom: 5px;
+        }
+
+        .best-score-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #007bff; /* 포인트 파란색으로 변경 */
+            text-shadow: none;
+        }
+
+        .opening-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .bonus-card-toggle {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 5px 0;
+        }
+
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            color: #333; /* 어두운 텍스트 색상 */
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .checkbox-container input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            background: #e0e6ed;
+            border: 2px solid #ced4da;
+            border-radius: 4px;
+            margin-right: 10px;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .checkbox-container input:checked + .checkmark {
+            background: #007bff; /* 파란색으로 변경 */
+            border-color: #0069d9;
+        }
+
+        .checkbox-container input:checked + .checkmark::after {
+            content: '✓';
+            position: absolute;
+            left: 3px;
+            top: -2px;
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .checkbox-text {
+            font-size: 0.95em;
+        }
+
+        .opening-btn {
+            background: linear-gradient(135deg, #007bff, #0056b3); /* 밝고 심플한 파란색 버튼 */
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px; /* 둥글게 변경 */
+            font-size: 1.1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.2); /* 그림자 약하게 */
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .opening-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 123, 255, 0.3);
+        }
+
+        .opening-btn.secondary {
+            background: #6c757d; /* 회색 버튼 */
+            box-shadow: 0 8px 25px rgba(108, 117, 125, 0.2);
+        }
+
+        .opening-btn.secondary:hover {
+            box-shadow: 0 12px 35px rgba(108, 117, 125, 0.3);
+        }
+
+        @keyframes openingFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes openingSlideUp {
+            from { 
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* 가이드 화면 스타일 */
+        .guide-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%); /* 오프닝과 동일하게 */
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .guide-container {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .guide-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .guide-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .guide-content {
+            text-align: left;
+        }
+
+        .guide-section {
+            background: #f8f9fa; /* 밝은 회색 */
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e9ecef;
+        }
+
+        .guide-section h3 {
+            color: #007bff; /* 파란색으로 변경 */
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .guide-section p {
+            margin-bottom: 8px;
+            line-height: 1.5;
+            color: #495057;
+            font-size: 0.95em;
+        }
+
+        /* 게임 컨테이너 */
+        .game-container {
+            text-align: center;
+            background: #ffffff; /* 흰색 배경 */
+            border-radius: 20px;
+            padding: 20px; /* 패딩 증가 */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+            position: relative;
+            max-width: 400px; /* 최대 너비 증가 */
+            width: 100%;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.5s ease;
+        }
+
+        .game-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        h1 {
+            font-size: 2.2em;
+            margin-bottom: 15px; /* 마진 증가 */
+            color: #343a40; /* 어두운 색으로 */
+            text-shadow: none;
+            letter-spacing: 1px;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .stat-box {
+            background: #f8f9fa; /* 밝은 회색 */
+            padding: 10px;
+            border-radius: 10px;
+            border: 1px solid #e9ecef;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            margin-bottom: 3px;
+            color: #6c757d;
+        }
+
+        .stat-value {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #343a40;
+        }
+
+        .skills-container {
+            background: #f8f9fa; /* 밝은 회색 */
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 15px;
+            border: 1px solid #e9ecef;
+        }
+
+        .skills-title {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #f39c12;
+            font-weight: bold;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .skill-slot {
+            background: #e9ecef; /* 더 밝은 회색 */
+            border: 2px dashed #ced4da; /* 회색 점선 */
+            border-radius: 10px;
+            padding: 10px 5px;
+            min-height: 55px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            color: #6c757d;
+        }
+
+        .skill-slot.acquired {
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            border: 2px solid #27ae60;
+            color: white;
+            font-weight: bold;
+            animation: skillGlow 2s infinite alternate;
+        }
+
+        @keyframes skillGlow {
+            0% { box-shadow: 0 0 5px rgba(39, 174, 96, 0.5); }
+            100% { box-shadow: 0 0 20px rgba(39, 174, 96, 0.8); }
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px; /* 간격 증가 */
+            background: #e9ecef; /* 밝은 회색 */
+            padding: 15px; /* 패딩 증가 */
+            border-radius: 15px;
+            margin: 15px 0;
+            border: 1px solid #dee2e6;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* 그림자 약하게 */
+            touch-action: none;
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        .tile {
+            width: auto; /* 자동 너비 */
+            aspect-ratio: 1 / 1; /* 1:1 비율 유지 */
+            height: auto;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* 그림자 약간 약하게 */
+            transition: all 0.2s ease-in-out;
+            border: none; /* 테두리 제거 */
+            position: relative;
+            cursor: pointer;
+        }
+
+        .tile.moving {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .tile.new-tile {
+            position: relative;
+            animation: tileAppear 0.4s ease-out;
+        }
+
+        .tile.new-tile::before {
+            content: 'N';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            border-radius: 3px;
+            padding: 1px 3px;
+            font-size: 0.6em;
+            font-weight: bold;
+            line-height: 1;
+            z-index: 10;
+        }
+
+        @keyframes tileAppear {
+            0% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1.2);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .tile.merging {
+            animation: tileMerge 0.3s ease-out;
+        }
+
+        @keyframes tileMerge {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+                box-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .tile.empty {
+            background: #d6dbe0; /* 빈 타일 색상 변경 */
+            border: 2px dashed #b8c0c8;
+        }
+
+        .tile.clickable {
+            cursor: pointer;
+            border: 3px solid #feca57;
+            animation: clickablePulse 1s infinite;
+        }
+
+        @keyframes clickablePulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .tile.crux {
+            background: linear-gradient(135deg, #6c757d, #343a40) !important; /* 어두운 회색 크럭스 */
+            border: 3px solid #495057 !important;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tile.crux .crux-icon {
+            font-size: 1.8em;
+            margin-bottom: 2px;
+        }
+
+        .tile.crux .crux-counter {
+            font-size: 0.7em;
+            color: #feca57;
+            background: rgba(0, 0, 0, 0.7); /* 배경은 유지 */
+            border-radius: 8px;
+            padding: 2px 6px;
+            font-weight: bold;
+        }
+
+        /* 볼더링 그레이드 색상 */
+        .tile.v0 { 
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            color: white; /* 텍스트 색상 흰색으로 변경 */
+        }
+        .tile.v1 { 
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+        }
+        .tile.v2 { 
+            background: linear-gradient(135deg, #f1c40f, #f39c12);
+            box-shadow: 0 4px 15px rgba(241, 196, 15, 0.3);
+        }
+        .tile.v3 { 
+            background: linear-gradient(135deg, #27ae60, #229954);
+            box-shadow: 0 4px 15px rgba(39, 174, 96, 0.3);
+        }
+        .tile.v4 { 
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            color: white;
+        }
+        .tile.v5 { 
+            background: linear-gradient(135deg, #9b59b6, #8e44ad);
+            box-shadow: 0 4px 15px rgba(155, 89, 182, 0.3);
+        }
+        .tile.v6 { 
+            background: linear-gradient(135deg, #95a5a6, #7f8c8d);
+            box-shadow: 0 4px 15px rgba(149, 165, 166, 0.3);
+            color: white;
+        }
+        .tile.v7 { 
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            box-shadow: 0 4px 15px rgba(44, 62, 80, 0.3);
+            color: white;
+            border: 2px solid #ecf0f1;
+        }
+        .tile.skill-grip { 
+            background: linear-gradient(135deg, #2c3e50, #34495e, #e74c3c);
+            animation: skillPulse 2s infinite;
+            color: white;
+            border: 2px solid #ecf0f1;
+        }
+        .tile.skill-core { 
+            background: linear-gradient(135deg, #2c3e50, #34495e, #f39c12);
+            animation: skillPulse 2s infinite;
+            color: white;
+            border: 2px solid #ecf0f1;
+        }
+        .tile.skill-dynamic { 
+            background: linear-gradient(135deg, #2c3e50, #34495e, #27ae60);
+            animation: skillPulse 2s infinite;
+            color: white;
+            border: 2px solid #ecf0f1;
+        }
+        .tile.skill-balance { 
+            background: linear-gradient(135deg, #2c3e50, #34495e, #3498db);
+            animation: skillPulse 2s infinite;
+            color: white;
+            border: 2px solid #ecf0f1;
+        }
+        @keyframes skillPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 0 4px 15px rgba(44, 62, 80, 0.4);
+            }
+            50% { 
+                transform: scale(1.05);
+                box-shadow: 0 6px 25px rgba(44, 62, 80, 0.8);
+            }
+        }
+
+
+        .controls {
+            margin: 25px 0 10px 0; /* 마진 조정 */
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: #6c757d; /* 회색 버튼 */
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px; /* 둥글게 */
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            min-width: 80px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            background: #5a6268;
+        }
+        
+        /* '새 게임' 버튼을 파란색으로 강조 */
+        .controls .btn:first-child {
+            background: #007bff;
+        }
+        .controls .btn:first-child:hover {
+            background: #0069d9;
+        }
+
+        .btn.shuffle-btn {
+            background: #9b59b6;
+            font-size: 1.2em;
+            padding: 10px 20px;
+        }
+
+        .btn.shuffle-btn:hover {
+            background: #8e44ad;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .game-over {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7); /* 배경 어둡게 */
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .game-over-content {
+            background: #ffffff; /* 흰색 배경 */
+            color: #333; /* 어두운 텍스트 */
+            padding: 40px;
+            border-radius: 25px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: none;
+            max-width: 400px;
+        }
+        
+        #game-over-title {
+            color: #007bff;
+        }
+
+        .achievement-display {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #27ae60, #2ecc71);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px; /* 둥글게 */
+            font-weight: bold;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            border: none;
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .achievement-display.show {
+            opacity: 1;
+            animation: achievementShow 3s ease;
+        }
+
+        @keyframes achievementShow {
+            0% { 
+                transform: translateX(100px) scale(0.8); 
+                opacity: 0; 
+            }
+            20%, 80% { 
+                transform: translateX(0) scale(1); 
+                opacity: 1; 
+            }
+            100% { 
+                transform: translateX(100px) scale(0.8); 
+                opacity: 0; 
+            }
+        }
+
+        /* 보너스 카드 표시 */
+        .bonus-card-display {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 5vh;
+            z-index: 1500;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .bonus-card-content {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            border: none;
+            max-width: 350px;
+            width: 90%;
+            animation: cardSlideDown 0.5s ease;
+            color: white;
+            pointer-events: auto;
+        }
+
+        @keyframes cardSlideDown {
+            from { 
+                transform: translateY(-50px) scale(0.8);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+        }
+
+        .bonus-card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .bonus-card-title {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #fff; /* 흰색, 그림자 추가 */
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+        }
+
+        .bonus-card-description {
+            font-size: 1em;
+            margin-bottom: 20px;
+            line-height: 1.4;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .bonus-card-question {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .bonus-card-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .bonus-card-actions .btn {
+            padding: 10px 20px;
+            font-size: 0.9em;
+            min-width: 60px;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: rgba(0,0,0,0.1);
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .version-info {
+            position: fixed;
+            bottom: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            z-index: 1000;
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            .guide-container {
+                padding: 25px;
+                margin: 10px;
+            }
+            
+            .guide-section {
+                padding: 15px;
+            }
+            .game-container {
+                padding: 15px;
+            }
+            .game-board {
+                gap: 8px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 오프닝화면 -->
+    <div class="opening-screen" id="opening-screen">
+        <div class="opening-container">
+            <div class="opening-title">
+                <div class="climbing-icon">🧗‍♂️</div>
+                <div class="title-text">볼더링 2048</div>
+            </div>
+            
+            <div class="subtitle">클라이밍 그레이드를 정복하라!</div>
+            
+            <div class="best-score-display">
+                <div class="best-score-label">최고 점수</div>
+                <div class="best-score-value" id="opening-best-score">0</div>
+            </div>
+            
+            <div class="opening-buttons">
+                <button class="opening-btn" onclick="gameStart()">
+                    🎯 새 게임 시작
+                </button>
+                
+                <div class="bonus-card-toggle">
+                    <label class="checkbox-container">
+                        <input type="checkbox" id="bonus-card-enabled" checked>
+                        <span class="checkmark"></span>
+                        <span class="checkbox-text">보너스 카드 등장</span>
+                    </label>
+                </div>
+                
+                <button class="opening-btn secondary" onclick="guideShow()">
+                    📖 가이드 보기
+								</button>
+								
+								 <!-- 푸터가 삽입될 위치 -->
+					<div id="footer-placeholder"></div>
+
+					<script>
+						// 공통 푸터 삽입
+						// mini_games 폴더 안에 있으므로, 상위 폴더의 footer.html을 참조하기 위해 ../ 를 사용합니다.
+						fetch('/../../../footer.html')
+							.then(response => {
+								if (!response.ok) {
+									throw new Error('네트워크 응답이 올바르지 않습니다: ' + response.statusText);
+								}
+								return response.text();
+							})
+							.then(data => {
+								const placeholder = document.getElementById('footer-placeholder');
+								if (placeholder) {
+									placeholder.innerHTML = data;
+									// 푸터에 있는 Lucide 아이콘을 렌더링하기 위해 함수를 다시 호출합니다.
+									if (typeof lucide !== 'undefined') {
+										lucide.createIcons();
+									}
+								}
+							})
+							.catch(error => {
+								console.error('푸터를 불러오는 데 문제가 발생했습니다:', error);
+								const placeholder = document.getElementById('footer-placeholder');
+								if (placeholder) {
+									placeholder.innerHTML = '<p class="text-center text-red-500 py-10">푸터를 불러오지 못했습니다. 로컬 환경에서 테스트하는 경우 브라우저 보안 정책(CORS) 때문일 수 있습니다.</p>';
+								}
+							});
+
+						// 페이지의 나머지 Lucide 아이콘을 렌더링합니다.
+						if (typeof lucide !== 'undefined') {
+							lucide.createIcons();
+						}
+					</script>
+
+
+
+            </div>
+        </div>
+    </div>
+
+    <!-- 가이드 화면 -->
+    <div class="guide-screen" id="guide-screen">
+        <div class="guide-container">
+            <div class="guide-title">
+                <div class="climbing-icon">🧗‍♂️</div>
+                <div class="title-text">클라이밍 가이드</div>
+            </div>
+            
+            <div class="guide-buttons">
+                <button class="opening-btn" onclick="gameStart()">
+                    🎯 게임 시작하기
+                </button>
+                <button class="opening-btn secondary" onclick="mainMenuShow()">
+                    🏠 메인메뉴 가기
+                </button>
+            </div>
+            
+            <div class="guide-content">
+                <div class="guide-section">
+                    <h3>🎮 조작법</h3>
+                    <p><strong>화살표 키</strong>, <strong>WASD</strong> 또는 <strong>스와이프</strong>로 홀드를 움직이세요</p>
+                    <p><strong>같은 그레이드</strong>를 합쳐서 <strong>상위 그레이드</strong>로 업그레이드하세요</p>
+                    <p><strong>V0</strong> → <strong>V1</strong> → <strong>V2</strong> → <strong>V3</strong> → <strong>V4</strong> → <strong>V5</strong> → <strong>V6</strong> → <strong>V7+</strong></p>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>🏆 목표</h3>
+                    <p><strong>V7+</strong>를 만들면 순서대로 <strong>스킬</strong>을 획득합니다</p>
+                    <p><strong>💪 그립력</strong> → <strong>🏋️ 코어</strong> → <strong>🚀 다이나믹</strong> → <strong>⚖️ 밸런스</strong></p>
+                    <p><strong>4가지 스킬</strong>을 모두 수집하면 <strong>클라이밍 마스터</strong>!</p>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>🎁 보너스 카드 (10번 움직일 때마다)</h3>
+                    <p><strong>🧗‍♂️ 보너스 홀드:</strong> V5 타일이 무작위 위치에 생성</p>
+                    <p><strong>🗑️ 홀드(타일) 삭제:</strong> 마음에 안 드는 홀드를 삭제</p>
+                    <p><strong>🎲 무작위 재배치:</strong> 모든 타일을 섞어서 재배치</p>
+                    <p><strong>🪨 크럭스:</strong> 3턴간 움직이지 않는 바위 생성</p>
+                </div>
+                
+                <div class="guide-section">
+                    <h3>🎯 팁</h3>
+                    <p>연속으로 합치면 <strong>콤보 보너스</strong>를 획득할 수 있습니다</p>
+                    <p>스킬 타일은 특별한 <strong>애니메이션 효과</strong>로 표시됩니다</p>
+                    <p>보너스 카드는 선택적으로 사용할 수 있습니다</p>
+                    <p>전략적으로 움직여서 <strong>최고 점수</strong>에 도전해보세요!</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 메인 게임 화면 -->
+    <div class="game-container" id="game-container">
+        <!-- 보너스 카드 받기 화면 (1단계) -->
+        <div class="bonus-card-display" id="bonus-card-receive">
+            <div class="bonus-card-content">
+                <div class="bonus-card-icon">🎁</div>
+                <div class="bonus-card-title">보너스 카드 획득!</div>
+                <div class="bonus-card-description">10턴마다 받는 특별한 보너스 카드입니다!</div>
+                <div class="bonus-card-question">카드를 열어보시겠습니까?</div>
+                <div class="bonus-card-actions">
+                    <button class="btn" onclick="bonusCardOpen()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">카드 열기</button>
+                    <button class="btn" onclick="bonusCardDiscard()" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">버리기</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 보너스 카드 사용 확인 화면 (2단계) -->
+        <div class="bonus-card-display" id="bonus-card-confirm">
+            <div class="bonus-card-content">
+                <div class="bonus-card-icon" id="bonus-card-icon">🎁</div>
+                <div class="bonus-card-title" id="bonus-card-title">보너스 카드!</div>
+                <div class="bonus-card-description" id="bonus-card-description">보너스 카드를 받았습니다!</div>
+                <div class="bonus-card-question" id="bonus-card-question">사용하시겠습니까?</div>
+                <div class="bonus-card-actions" id="bonus-card-actions">
+                    <button class="btn" onclick="bonusConfirm()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">예</button>
+                    <button class="btn" onclick="bonusDecline()" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">아니오</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 타일 삭제 메시지 (게임 상단에 위치) -->
+        <div class="bonus-card-display" id="tile-delete-mode" style="display: none;">
+            <div class="bonus-card-content" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);">
+                <div class="bonus-card-icon" style="color: #d63384;">🗑️</div>
+                <div class="bonus-card-title" style="color: #d63384;">타일 삭제</div>
+                <div class="bonus-card-description" style="color: #333;">어느 타일을 삭제하시겠습니까?<br>삭제할 타일을 클릭해주세요.</div>
+                <div class="bonus-card-actions">
+                    <button class="btn" onclick="tileDeleteCancel()">취소</button>
+                </div>
+            </div>
+        </div>
+
+        <h1>🧗‍♂️ Boulder Master</h1>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">점수</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">최고 점수</div>
+                <div class="stat-value" id="best-score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">움직임</div>
+                <div class="stat-value" id="move-count">0</div>
+            </div>
+        </div>
+
+        <div class="skills-container">
+            <div class="skills-title">🎯 클라이밍 스킬 수집</div>
+            <div class="skills-grid">
+                <div class="skill-slot" id="skill-grip">
+                    <div>💪</div>
+                    <div>그립력</div>
+                </div>
+                <div class="skill-slot" id="skill-core">
+                    <div>🏋️</div>
+                    <div>코어</div>
+                </div>
+                <div class="skill-slot" id="skill-dynamic">
+                    <div>🚀</div>
+                    <div>다이나믹</div>
+                </div>
+                <div class="skill-slot" id="skill-balance">
+                    <div>⚖️</div>
+                    <div>밸런스</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-board" id="game-board">
+            <!-- 타일들이 여기에 동적으로 생성됩니다 -->
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="gameNew()">새 게임</button>
+            <button class="btn" onclick="mainMenuShow()">메인 메뉴</button>
+            <button class="btn shuffle-btn" id="shuffle-btn" onclick="tilesShuffleFunc()" style="display: none;">🎲</button>
+        </div>
+    </div>
+
+    <div class="game-over" id="game-over">
+        <div class="game-over-content">
+            <h2 id="game-over-title">세션 종료!</h2>
+            <p id="game-over-message"></p>
+            <p>점수: <span id="final-score"></span></p>
+            <button class="btn" onclick="gameNew()" style="background: #007bff;">다시 도전</button>
+            <button class="btn" onclick="mainMenuShow()">메인 화면</button>
+        </div>
+    </div>
+
+    <div class="achievement-display" id="achievement-display"></div>
+
+    <script>
+        // 스크립트 부분은 수정하지 않았습니다.
+        // GAME CONSTANTS
+        const GAME_CONFIG = {
+            BOARD_SIZE: 4,
+            SKILL_TYPES: ['grip', 'core', 'dynamic', 'balance'],
+            GRADES: ['empty', 'v0', 'v1', 'v2', 'v3', 'v4', 'v5', 'v6', 'v7'],
+            GRADE_NAMES: ['', 'V0', 'V1', 'V2', 'V3', 'V4', 'V5', 'V6', 'V7+'],
+            SKILL_NAMES: {
+                grip: '💪 그립력',
+                core: '🏋️ 코어',
+                dynamic: '🚀 다이나믹',
+                balance: '⚖️ 밸런스'
+            },
+            BONUS_TYPES: ['bonus_hold', 'tile_delete', 'shuffle_card', 'crux'],
+            STORAGE_KEY: 'boulderMasterBest',
+            V7_VALUE: 8,
+            MAX_MERGEABLE_VALUE: 7,
+            BONUS_INTERVAL: 10
+        };
+
+        // GAME STATE
+        let game = null;
+        let currentBonus = null;
+        let isDeleteMode = false;
+        let isBonusCardOpen = false;
+        let bonusCardEnabled = true;
+
+        // UTILITY FUNCTIONS
+        function createEmptyBoard() {
+            return Array(GAME_CONFIG.BOARD_SIZE).fill()
+                .map(() => Array(GAME_CONFIG.BOARD_SIZE).fill(0));
+        }
+
+        function deepCopyBoard(board) {
+            return board.map(row => [...row]);
+        }
+
+        function getRandomTile() {            
+			return Math.random() < 0.9 ? 1 : 2; // 90% V0, 10% V1
+        }
+
+        function getEmptyCells(board) {
+            const emptyCells = [];
+            for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                    if (board[i][j] === 0) {
+                        emptyCells.push({x: i, y: j});
+                    }
+                }
+            }
+            return emptyCells;
+        }
+
+        function isSkillTile(value) {
+            return typeof value === 'string' && value.startsWith('skill-');
+        }
+
+        function getSkillType(skillTile) {
+            return skillTile.split('-')[1];
+        }
+
+        function isCruxTile(value) {
+            return typeof value === 'object' && value && value.type === 'crux';
+        }
+
+        function isDeletableTile(value) {
+            // 빈 타일, 크럭스 타일, 스킬 타일은 삭제 불가
+            return value !== 0 && !isCruxTile(value) && !isSkillTile(value);
+        }
+
+        function processCruxTiles(board) {
+            for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                    if (isCruxTile(board[i][j])) {
+                        board[i][j].remaining--;
+                        if (board[i][j].remaining <= 0) {
+                            board[i][j] = 0; // 크럭스 제거
+                        }
+                    }
+                }
+            }
+        }
+
+        // DOM MANIPULATION
+        function updateScore(score) {
+            document.getElementById('score').textContent = score;
+        }
+        
+        function updateBestScore(bestScore) {
+            document.getElementById('best-score').textContent = bestScore;
+            document.getElementById('opening-best-score').textContent = bestScore;
+        }
+
+        function updateMoveCount(count) {
+            document.getElementById('move-count').textContent = count;
+        }
+        
+        function updateSkillsDisplay(skills) {
+            Object.keys(skills).forEach(skill => {
+                const element = document.getElementById(`skill-${skill}`);
+                element.classList.toggle('acquired', skills[skill]);
+            });
+        }
+        
+        function showAchievement(message) {
+            const achievementDisplay = document.getElementById('achievement-display');
+            achievementDisplay.textContent = message;
+            achievementDisplay.classList.add('show');
+            setTimeout(() => {
+                achievementDisplay.classList.remove('show');
+            }, 3000);
+        }
+        
+        function showGameOver(won, score) {
+            const gameOverDiv = document.getElementById('game-over');
+            const title = document.getElementById('game-over-title');
+            const message = document.getElementById('game-over-message');
+            const finalScore = document.getElementById('final-score');
+            
+            if (won) {
+                title.textContent = '🏆 클라이밍 마스터! 🏆';
+                message.textContent = '4가지 스킬을 모두 마스터했습니다! 당신은 진정한 볼더링 고수입니다!';
+            } else {
+                title.textContent = '세션 종료';
+                message.textContent = '더 이상 홀드를 잡을 수 없습니다. 다시 도전해보세요!';
+            }
+            
+            finalScore.textContent = score;
+            gameOverDiv.style.display = 'flex';
+        }
+        
+        function hideGameOver() {
+            document.getElementById('game-over').style.display = 'none';
+        }
+
+        function showOpeningScreen() {
+            document.getElementById('opening-screen').style.display = 'flex';
+            document.getElementById('guide-screen').style.display = 'none';
+            document.getElementById('game-container').classList.remove('show');
+        }
+
+        function hideOpeningScreen() {
+            document.getElementById('opening-screen').style.display = 'none';
+            setTimeout(() => {
+                document.getElementById('game-container').classList.add('show');
+            }, 300);
+        }
+
+        function showGuideScreen() {
+            document.getElementById('guide-screen').style.display = 'flex';
+            document.getElementById('opening-screen').style.display = 'none';
+            document.getElementById('game-container').classList.remove('show');
+        }
+
+        function hideGuideScreen() {
+            document.getElementById('guide-screen').style.display = 'none';
+        }
+
+        function enableTileDeleteMode() {
+            document.getElementById('tile-delete-mode').style.display = 'flex';
+            const tiles = document.querySelectorAll('.tile');
+            tiles.forEach((tile, index) => {
+                const row = Math.floor(index / GAME_CONFIG.BOARD_SIZE);
+                const col = index % GAME_CONFIG.BOARD_SIZE;
+                const tileValue = game.board[row][col];
+                
+                if (isDeletableTile(tileValue)) {
+                    tile.classList.add('clickable');
+                }
+            });
+            isBonusCardOpen = true;
+        }
+
+        function disableTileDeleteMode() {
+            document.getElementById('tile-delete-mode').style.display = 'none';
+            const tiles = document.querySelectorAll('.tile');
+            tiles.forEach(tile => {
+                tile.classList.remove('clickable');
+            });
+            isBonusCardOpen = false;
+        }
+
+        function showBonusCardReceive() {
+            const element = document.getElementById('bonus-card-receive');
+            if (element) {
+                element.style.display = 'flex';
+                isBonusCardOpen = true;
+            }
+        }
+
+        function hideBonusCardReceive() {
+            const element = document.getElementById('bonus-card-receive');
+            if (element) {
+                element.style.display = 'none';
+                isBonusCardOpen = false;
+            }
+        }
+
+        function showBonusCardConfirm(bonusType) {
+            const bonusDisplay = document.getElementById('bonus-card-confirm');
+            const icon = document.getElementById('bonus-card-icon');
+            const title = document.getElementById('bonus-card-title');
+            const description = document.getElementById('bonus-card-description');
+            const question = document.getElementById('bonus-card-question');
+            const actions = document.getElementById('bonus-card-actions');
+
+            const bonusInfo = getBonusInfo(bonusType);
+            icon.textContent = bonusInfo.icon;
+            title.textContent = bonusInfo.title;
+            description.textContent = bonusInfo.description;
+            
+            if (bonusType === 'crux') {
+                question.textContent = '크럭스가 자동으로 발동됩니다!';
+                actions.style.display = 'none';
+                setTimeout(() => {
+                    addCrux();
+                    hideBonusCardConfirm();
+                    currentBonus = null;
+                }, 2000);
+            } else {
+                question.textContent = '사용하시겠습니까?';
+                actions.style.display = 'flex';
+            }
+
+            bonusDisplay.style.display = 'flex';
+            isBonusCardOpen = true;
+        }
+
+        function hideBonusCardConfirm() {
+            const bonusDisplay = document.getElementById('bonus-card-confirm');
+            const actions = document.getElementById('bonus-card-actions');
+            
+            if (bonusDisplay) {
+                bonusDisplay.style.display = 'none';
+            }
+            if (actions) {
+                actions.style.display = 'flex';
+            }
+            isBonusCardOpen = false;
+        }
+
+        function getBonusInfo(bonusType) {
+            const bonusInfos = {
+                bonus_hold: {
+                    icon: '🧗‍♂️',
+                    title: '보너스 홀드!',
+                    description: 'V5 홀드가 무작위 위치에 생성됩니다!'
+                },
+                tile_delete: {
+                    icon: '🗑️',
+                    title: '홀드(타일) 삭제 카드!',
+                    description: '마음에 안 드는 홀드를 삭제할 수 있습니다!'
+                },
+                shuffle_card: {
+                    icon: '🎲',
+                    title: '무작위 재배치 카드!',
+                    description: '무작위로 게임 타일을 섞을 수 있습니다 (나중에 사용 가능)'
+                },
+                crux: {
+                    icon: '🪨',
+                    title: '크럭스!',
+                    description: '3턴 동안 움직이지 않는 바위가 생성됩니다!'
+                }
+            };
+            return bonusInfos[bonusType] || bonusInfos.bonus_hold;
+        }
+
+        function showShuffleButton() {
+            document.getElementById('shuffle-btn').style.display = 'inline-block';
+        }
+
+        function hideShuffleButton() {
+            document.getElementById('shuffle-btn').style.display = 'none';
+        }
+
+        // RENDER FUNCTIONS
+        function renderBoard(board, animateNewTiles = false) {
+            const boardElement = document.getElementById('game-board');
+            boardElement.innerHTML = '';
+            
+            for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                    const tile = createTileElement(board[i][j], animateNewTiles);
+                    boardElement.appendChild(tile);
+                }
+            }
+            setupTileClickHandlers();
+        }
+        
+        function createTileElement(value, isNewTile = false) {
+            const tile = document.createElement('div');
+            
+            if (value === 0) {
+                tile.className = 'tile empty';
+            } else if (isCruxTile(value)) {
+                renderCruxTile(tile, value, isNewTile);
+            } else if (isSkillTile(value)) {
+                renderSkillTile(tile, value, isNewTile);
+            } else {
+                renderGradeTile(tile, value, isNewTile);
+            }
+            
+            return tile;
+        }
+
+        function renderCruxTile(tile, cruxTile, isNewTile = false) {
+            tile.className = 'tile crux';
+            if (isNewTile) {
+                tile.classList.add('new-tile');
+            }
+            
+            const icon = document.createElement('div');
+            icon.className = 'crux-icon';
+            icon.textContent = '🪨';
+            
+            const counter = document.createElement('div');
+            counter.className = 'crux-counter';
+            counter.textContent = `-${cruxTile.remaining}턴`;
+            
+            tile.appendChild(icon);
+            tile.appendChild(counter);
+        }
+        
+        function renderSkillTile(tile, skillTile, isNewTile = false) {
+            const skillType = getSkillType(skillTile);
+            tile.className = `tile ${skillTile}`;
+            if (isNewTile) {
+                tile.classList.add('new-tile');
+            }
+            
+            const gradeDiv = document.createElement('div');
+            gradeDiv.className = 'grade-text';
+            gradeDiv.textContent = 'V7+';
+            
+            const skillDiv = document.createElement('div');
+            skillDiv.className = 'skill-text';
+            skillDiv.textContent = getSkillDisplayText(skillType);
+            
+            tile.appendChild(gradeDiv);
+            tile.appendChild(skillDiv);
+        }
+        
+        function renderGradeTile(tile, value, isNewTile = false) {
+            tile.className = `tile ${GAME_CONFIG.GRADES[value]}`;
+            if (isNewTile) {
+                tile.classList.add('new-tile');
+            }
+            tile.textContent = GAME_CONFIG.GRADE_NAMES[value];
+        }
+        
+        function getSkillDisplayText(skillType) {
+            const skillTexts = {
+                grip: '그립력',
+                core: '코어',
+                dynamic: '다이나믹',
+                balance: '밸런스'
+            };
+            return skillTexts[skillType] || '스킬';
+        }
+
+        function setupTileClickHandlers() {
+            const tiles = document.querySelectorAll('.tile');
+            tiles.forEach((tile, index) => {
+                const row = Math.floor(index / GAME_CONFIG.BOARD_SIZE);
+                const col = index % GAME_CONFIG.BOARD_SIZE;
+                
+                tile.onclick = () => {
+                    if (isDeleteMode) {
+                        deleteTile(row, col);
+                    }
+                };
+            });
+        }
+
+        // GAME LOGIC
+        function canMerge(a, b) {
+            if (a === 0 || b === 0) return false;
+            if (isSkillTile(a) || isSkillTile(b)) return false;
+            if (isCruxTile(a) || isCruxTile(b)) return false;
+            return a === b && a >= 1 && a <= GAME_CONFIG.MAX_MERGEABLE_VALUE;
+        }
+        
+        function processLine(line) {
+            let newLine = [];
+            let cruxPositions = [];
+            
+            for (let i = 0; i < line.length; i++) {
+                if (isCruxTile(line[i])) {
+                    cruxPositions.push({pos: i, tile: line[i]});
+                }
+            }
+            
+            let movableTiles = line.filter(cell => !isCruxTile(cell) && cell !== 0);
+            let moved = false;
+            let merges = 0;
+            
+            for (let i = 0; i < movableTiles.length - 1; i++) {
+                if (canMerge(movableTiles[i], movableTiles[i + 1])) {
+                    const mergedValue = movableTiles[i] + 1;
+                    movableTiles[i] = mergedValue;
+                    movableTiles.splice(i + 1, 1);
+                    merges++;
+                    moved = true;
+                }
+            }
+            
+            newLine = new Array(GAME_CONFIG.BOARD_SIZE).fill(0);
+            
+            cruxPositions.forEach(crux => {
+                newLine[crux.pos] = crux.tile;
+            });
+            
+            let insertIndex = 0;
+            for (let tile of movableTiles) {
+                while (insertIndex < GAME_CONFIG.BOARD_SIZE && newLine[insertIndex] !== 0) {
+                    insertIndex++;
+                }
+                if (insertIndex < GAME_CONFIG.BOARD_SIZE) {
+                    newLine[insertIndex] = tile;
+                    insertIndex++;
+                }
+            }
+            
+            if (JSON.stringify(line) !== JSON.stringify(newLine)) {
+                moved = true;
+            }
+            
+            return { line: newLine, moved, merges };
+        }
+        
+        function moveBoard(board, direction) {
+            let moved = false;
+            let totalMerges = 0;
+            
+            if (direction === 'left') {
+                for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                    const result = processLine(board[i]);
+                    board[i] = result.line;
+                    if (result.moved) moved = true;
+                    totalMerges += result.merges;
+                }
+            } else if (direction === 'right') {
+                for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                    const result = processLine([...board[i]].reverse());
+                    board[i] = result.line.reverse();
+                    if (result.moved) moved = true;
+                    totalMerges += result.merges;
+                }
+            } else if (direction === 'up') {
+                for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                    const column = [board[0][j], board[1][j], board[2][j], board[3][j]];
+                    const result = processLine(column);
+                    for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                        board[i][j] = result.line[i];
+                    }
+                    if (result.moved) moved = true;
+                    totalMerges += result.merges;
+                }
+            } else if (direction === 'down') {
+                for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                    const column = [board[0][j], board[1][j], board[2][j], board[3][j]];
+                    const result = processLine([...column].reverse());
+                    const newColumn = result.line.reverse();
+                    for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                        board[i][j] = newColumn[i];
+                    }
+                    if (result.moved) moved = true;
+                    totalMerges += result.merges;
+                }
+            }
+            
+            return { moved, merges: totalMerges };
+        }
+        
+        function hasAvailableMoves(board) {
+            for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                    if (board[i][j] === 0) return true;
+                }
+            }
+            
+            for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                    const current = board[i][j];
+                    if (isCruxTile(current)) continue;
+                    if (i < 3 && canMerge(current, board[i + 1][j])) return true;
+                    if (j < 3 && canMerge(current, board[i][j + 1])) return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // BONUS FUNCTIONS
+        function addBonusHold() {
+            const emptyCells = getEmptyCells(game.board);
+            if (emptyCells.length > 0) {
+                const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                game.board[randomCell.x][randomCell.y] = 6; // V5
+                showAchievement('보너스 V5 홀드 생성!');
+                game.renderWithNewTileAnimation([{x: randomCell.x, y: randomCell.y}]);
+            }
+        }
+
+        function startTileDeleteMode() {
+            hideBonusCardConfirm();
+            enableTileDeleteMode();
+            isDeleteMode = true;
+            currentBonus = null;
+        }
+
+        function deleteTile(row, col) {
+            if (isDeleteMode && isDeletableTile(game.board[row][col])) {
+                game.board[row][col] = 0;
+                showAchievement('타일이 삭제되었습니다!');
+                game.render();
+                cancelTileDelete();
+            }
+        }
+
+        function cancelTileDelete() {
+            isDeleteMode = false;
+            disableTileDeleteMode();
+        }
+
+        function giveShuffleCard() {
+            game.hasShuffle = true;
+            showShuffleButton();
+            showAchievement('무작위 재배치 카드 획득!');
+        }
+
+        function addCrux() {
+            const emptyCells = getEmptyCells(game.board);
+            if (emptyCells.length > 0) {
+                const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                game.board[randomCell.x][randomCell.y] = {
+                    type: 'crux',
+                    remaining: 3
+                };
+                showAchievement('크럭스 생성! 3턴 후 사라집니다');
+                game.renderWithNewTileAnimation([{x: randomCell.x, y: randomCell.y}]);
+            }
+        }
+
+        // GAME CLASS
+        class BoulderMasterGame {
+            constructor() {
+                this.board = createEmptyBoard();
+                this.gameOver = false;
+                this.moveCount = 0;
+                this.score = 0;
+                this.bestScore = parseInt(localStorage.getItem(GAME_CONFIG.STORAGE_KEY) || '0');
+                this.hasShuffle = false;
+                
+                this.skills = {
+                    grip: false,
+                    core: false,
+                    dynamic: false,
+                    balance: false
+                };
+                this.skillCount = 0;
+                
+                this.initialized = false;
+            }
+            
+            init() {
+                if (!this.initialized) {
+                    this.addRandomTile();
+                    this.addRandomTile();
+                    this.initialized = true;
+                }
+                this.updateDisplay();
+                this.render();
+                this.setupEventListeners();
+            }
+            
+            setupEventListeners() {
+                // 이벤트 리스너가 중복으로 등록되지 않도록 기존 리스너 제거
+                this.removeEventListeners();
+
+                // 키보드 이벤트
+                this.keydownHandler = (e) => {
+                    if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
+                    
+                    const keyActions = {
+                        'ArrowUp': 'up', 'w': 'up', 'W': 'up',
+                        'ArrowDown': 'down', 's': 'down', 'S': 'down',
+                        'ArrowLeft': 'left', 'a': 'left', 'A': 'left',
+                        'ArrowRight': 'right', 'd': 'right', 'D': 'right'
+                    };
+                    
+                    const direction = keyActions[e.key];
+                    if (direction) {
+                        e.preventDefault();
+                        this.handleMove(direction);
+                    }
+                };
+                
+                document.addEventListener('keydown', this.keydownHandler);
+
+                // 터치 이벤트 (모바일 지원)
+                this.touchStartX = 0;
+                this.touchStartY = 0;
+
+                const gameContainer = document.getElementById('game-container');
+                
+                this.touchStartHandler = (e) => {
+                    if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
+                    
+                    // If the touch starts on a button, do not initiate swipe tracking.
+                    if (e.target.closest('.btn')) {
+                        this.touchStartX = null; // Use null to indicate no swipe should be processed.
+                        this.touchStartY = null;
+                        return;
+                    }
+
+                    const touch = e.touches[0] || e.changedTouches[0];
+                    this.touchStartX = touch.clientX;
+                    this.touchStartY = touch.clientY;
+                };
+
+                this.touchMoveHandler = (e) => {
+                    if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
+                    e.preventDefault(); // 스크롤 방지
+                };
+
+                this.touchEndHandler = (e) => {
+                    if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
+                    
+                    // If swipe tracking was not initiated, do nothing.
+                    if (this.touchStartX === null || this.touchStartY === null) {
+                        return;
+                    }
+
+                    e.preventDefault();
+                    
+                    const touch = e.changedTouches[0];
+                    const touchEndX = touch.clientX;
+                    const touchEndY = touch.clientY;
+                    
+                    this.handleSwipe(this.touchStartX, this.touchStartY, touchEndX, touchEndY);
+                };
+
+                gameContainer.addEventListener('touchstart', this.touchStartHandler, { passive: false });
+                gameContainer.addEventListener('touchmove', this.touchMoveHandler, { passive: false });
+                gameContainer.addEventListener('touchend', this.touchEndHandler, { passive: false });
+
+                // 마우스 이벤트 (데스크톱에서 드래그 지원)
+                this.mouseStartX = 0;
+                this.mouseStartY = 0;
+                this.isMouseDown = false;
+
+                const gameBoard = document.getElementById('game-board');
+
+                this.mouseDownHandler = (e) => {
+                    if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
+                    e.preventDefault();
+                    this.isMouseDown = true;
+                    this.mouseStartX = e.clientX;
+                    this.mouseStartY = e.clientY;
+                };
+
+                this.mouseUpHandler = (e) => {
+                    if (this.gameOver || isBonusCardOpen || !this.isMouseDown || isDeleteMode) return;
+                    e.preventDefault();
+                    this.isMouseDown = false;
+                    const mouseEndX = e.clientX;
+                    const mouseEndY = e.clientY;
+                    this.handleSwipe(this.mouseStartX, this.mouseStartY, mouseEndX, mouseEndY);
+                };
+
+                this.mouseLeaveHandler = () => {
+                    this.isMouseDown = false;
+                };
+
+                gameBoard.addEventListener('mousedown', this.mouseDownHandler);
+                gameBoard.addEventListener('mouseup', this.mouseUpHandler);
+                gameBoard.addEventListener('mouseleave', this.mouseLeaveHandler);
+            }
+
+            removeEventListeners() {
+                if (this.keydownHandler) {
+                    document.removeEventListener('keydown', this.keydownHandler);
+                }
+                
+                const gameContainer = document.getElementById('game-container');
+                const gameBoard = document.getElementById('game-board');
+                
+                if (this.touchStartHandler) {
+                    gameContainer.removeEventListener('touchstart', this.touchStartHandler);
+                }
+                if (this.touchMoveHandler) {
+                    gameContainer.removeEventListener('touchmove', this.touchMoveHandler);
+                }
+                if (this.touchEndHandler) {
+                    gameContainer.removeEventListener('touchend', this.touchEndHandler);
+                }
+                if (this.mouseDownHandler) {
+                    gameBoard.removeEventListener('mousedown', this.mouseDownHandler);
+                }
+                if (this.mouseUpHandler) {
+                    gameBoard.removeEventListener('mouseup', this.mouseUpHandler);
+                }
+                if (this.mouseLeaveHandler) {
+                    gameBoard.removeEventListener('mouseleave', this.mouseLeaveHandler);
+                }
+            }
+
+            handleSwipe(startX, startY, endX, endY) {
+                const minSwipeDistance = 50; // 최소 스와이프 거리를 늘림
+                const deltaX = endX - startX;
+                const deltaY = endY - startY;
+                
+                if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
+                    return; // 너무 짧은 스와이프는 무시
+                }
+                
+                if (Math.abs(deltaX) > Math.abs(deltaY)) {
+                    // 수평 스와이프
+                    if (deltaX > 0) {
+                        this.handleMove('right');
+                    } else {
+                        this.handleMove('left');
+                    }
+                } else {
+                    // 수직 스와이프
+                    if (deltaY > 0) {
+                        this.handleMove('down');
+                    } else {
+                        this.handleMove('up');
+                    }
+                }
+            }
+
+            handleMove(direction) {
+                this.removeNewTileMarkers();
+                
+                const boardBefore = deepCopyBoard(this.board);
+                const result = moveBoard(this.board, direction);
+                
+                if (result.moved) {
+                    this.moveCount++;
+                    
+                    processCruxTiles(this.board);
+                    
+                    this.convertV7ToSkill();
+                    this.calculateScore(result);
+                    this.processSkillAcquisition();
+                    
+                    const emptyCellsBefore = getEmptyCells(this.board);
+                    this.addRandomTile();
+                    const emptyCellsAfter = getEmptyCells(this.board);
+                    
+                    const newTilePositions = this.findNewTilePositions(emptyCellsBefore, emptyCellsAfter);
+                    
+                    this.updateDisplay();
+                    this.renderWithNewTileAnimation(newTilePositions);
+                    
+                    if (bonusCardEnabled && this.moveCount % GAME_CONFIG.BONUS_INTERVAL === 0) {
+                        setTimeout(() => {
+                            this.showRandomBonus();
+                        }, 500);
+                    }
+                    
+                    this.checkGameState();
+                }
+            }
+
+            removeNewTileMarkers() {
+                const newTiles = document.querySelectorAll('.tile.new-tile');
+                newTiles.forEach(tile => {
+                    tile.classList.remove('new-tile');
+                });
+            }
+
+            findNewTilePositions(emptyCellsBefore, emptyCellsAfter) {
+                const newPositions = [];
+                
+                for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                    for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                        const wasEmpty = emptyCellsBefore.some(cell => cell.x === i && cell.y === j);
+                        const isEmptyNow = emptyCellsAfter.some(cell => cell.x === i && cell.y === j);
+                        
+                        if (wasEmpty && !isEmptyNow) {
+                            newPositions.push({x: i, y: j});
+                        }
+                    }
+                }
+                
+                return newPositions;
+            }
+
+            renderWithNewTileAnimation(newTilePositions) {
+                const boardElement = document.getElementById('game-board');
+                boardElement.innerHTML = '';
+                
+                for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                    for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                        const isNewTile = newTilePositions.some(pos => pos.x === i && pos.y === j);
+                        const tile = createTileElement(this.board[i][j], isNewTile);
+                        boardElement.appendChild(tile);
+                    }
+                }
+                setupTileClickHandlers();
+            }
+
+            showRandomBonus() {
+                const bonusTypes = GAME_CONFIG.BONUS_TYPES;
+                const randomIndex = Math.floor(Math.random() * bonusTypes.length);
+                currentBonus = bonusTypes[randomIndex];
+                
+                showBonusCardReceive();
+            }
+
+            shuffleTiles() {
+                if (this.hasShuffle) {
+                    const tiles = [];
+                    const positions = [];
+                    
+                    for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                        for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                            if (this.board[i][j] !== 0) {
+                                tiles.push(this.board[i][j]);
+                                positions.push({x: i, y: j});
+                            }
+                        }
+                    }
+                    
+                    for (let i = tiles.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+                    }
+                    
+                    for (let pos of positions) {
+                        this.board[pos.x][pos.y] = 0;
+                    }
+                    
+                    for (let i = 0; i < tiles.length; i++) {
+                        const pos = positions[i];
+                        this.board[pos.x][pos.y] = tiles[i];
+                    }
+                    
+                    this.hasShuffle = false;
+                    hideShuffleButton();
+                    showAchievement('타일이 무작위로 재배치되었습니다!');
+                    
+                    this.render();
+                }
+            }
+            
+            calculateScore(result) {
+                if (result.merges > 1) {
+                    const comboBonus = result.merges * 100;
+                    showAchievement(`${result.merges}연속 완등! +${comboBonus}`);
+                    this.addScore(comboBonus);
+                }
+            }
+
+            addScore(points) {
+                this.score += points;
+                this.updateBestScore();
+                updateScore(this.score);
+            }
+
+            updateBestScore() {
+                if (this.score > this.bestScore) {
+                    this.bestScore = this.score;
+                    localStorage.setItem(GAME_CONFIG.STORAGE_KEY, this.bestScore.toString());
+                    updateBestScore(this.bestScore);
+                }
+            }
+            
+            processSkillAcquisition() {
+                for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                    for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                        const cell = this.board[i][j];
+                        if (isSkillTile(cell)) {
+                            const skillType = getSkillType(cell);
+                            if (this.acquireSkill(skillType)) {
+                                this.addScore(500);
+                            }
+                        }
+                    }
+                }
+            }
+
+            acquireSkill(skillType) {
+                if (!this.skills[skillType]) {
+                    this.skills[skillType] = true;
+                    showAchievement(`${GAME_CONFIG.SKILL_NAMES[skillType]} 스킬 획득!`);
+                    updateSkillsDisplay(this.skills);
+                    return true;
+                }
+                return false;
+            }
+
+            hasAllSkills() {
+                return Object.values(this.skills).every(skill => skill);
+            }
+
+            convertV7ToSkill() {
+                for (let i = 0; i < GAME_CONFIG.BOARD_SIZE; i++) {
+                    for (let j = 0; j < GAME_CONFIG.BOARD_SIZE; j++) {
+                        if (this.board[i][j] === GAME_CONFIG.V7_VALUE && this.skillCount < 4) {
+                            const skillTile = this.generateSkillTile();
+                            if (typeof skillTile === 'string') {
+                                this.board[i][j] = skillTile;
+                                this.skillCount++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            generateSkillTile() {
+                if (this.skillCount < 4) {
+                    return `skill-${GAME_CONFIG.SKILL_TYPES[this.skillCount]}`;
+                }
+                return GAME_CONFIG.V7_VALUE;
+            }
+            
+            addRandomTile() {
+                const emptyCells = getEmptyCells(this.board);
+                
+                if (emptyCells.length > 0) {
+                    const randomCell = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+                    this.board[randomCell.x][randomCell.y] = getRandomTile();
+                }
+            }
+            
+            checkGameState() {
+                if (this.hasAllSkills()) {
+                    setTimeout(() => this.endGame(true), 500);
+                    return;
+                }
+                
+                if (!hasAvailableMoves(this.board)) {
+                    this.gameOver = true;
+                    setTimeout(() => this.endGame(false), 300);
+                }
+            }
+            
+            endGame(won) {
+                this.gameOver = true;
+                showGameOver(won, this.score);
+            }
+
+            newGame() {
+                this.board = createEmptyBoard();
+                this.gameOver = false;
+                this.moveCount = 0;
+                this.score = 0;
+                this.hasShuffle = false;
+                
+                this.skills = {
+                    grip: false,
+                    core: false,
+                    dynamic: false,
+                    balance: false
+                };
+                this.skillCount = 0;
+                
+                isDeleteMode = false;
+                isBonusCardOpen = false;
+                currentBonus = null;
+                
+                hideGameOver();
+                hideShuffleButton();
+                disableTileDeleteMode();
+                hideBonusCardReceive();
+                hideBonusCardConfirm();
+                
+                this.addRandomTile();
+                this.addRandomTile();
+                this.updateDisplay();
+                this.render();
+            }
+            
+            updateDisplay() {
+                updateScore(this.score);
+                updateBestScore(this.bestScore);
+                updateMoveCount(this.moveCount);
+                updateSkillsDisplay(this.skills);
+            }
+            
+            render() {
+                renderBoard(this.board);
+            }
+        }
+
+        // GLOBAL FUNCTIONS
+        function gameStart() {
+            bonusCardEnabled = document.getElementById('bonus-card-enabled').checked;
+            
+            hideOpeningScreen();
+            hideGuideScreen();
+            if (!game) {
+                game = new BoulderMasterGame();
+            }
+            game.init();
+        }
+
+        function gameNew() {
+            if (game) {
+                game.newGame();
+            } else {
+                game = new BoulderMasterGame();
+                game.init();
+            }
+        }
+
+        function guideShow() {
+            showGuideScreen();
+        }
+
+        function mainMenuShow() {
+            showOpeningScreen();
+        }
+
+        function tilesShuffleFunc() {
+            if (game) {
+                game.shuffleTiles();
+            }
+        }
+
+        // BONUS CARD GLOBAL FUNCTIONS
+        function bonusCardOpen() {
+            hideBonusCardReceive();
+            if (currentBonus) {
+                showBonusCardConfirm(currentBonus);
+            }
+        }
+
+        function bonusCardDiscard() {
+            hideBonusCardReceive();
+            currentBonus = null;
+            showAchievement('보너스 카드를 버렸습니다.');
+        }
+
+        function bonusConfirm() {
+            if (!currentBonus) return;
+
+            switch (currentBonus) {
+                case 'bonus_hold':
+                    addBonusHold();
+                    break;
+                case 'tile_delete':
+                    startTileDeleteMode();
+                    break;
+                case 'shuffle_card':
+                    giveShuffleCard();
+                    break;
+                case 'crux':
+                    break;
+            }
+
+            if (currentBonus !== 'tile_delete' && currentBonus !== 'crux') {
+                hideBonusCardConfirm();
+                currentBonus = null;
+            }
+        }
+
+        function bonusDecline() {
+            hideBonusCardConfirm();
+            currentBonus = null;
+            showAchievement('보너스 카드를 사용하지 않았습니다.');
+        }
+
+        function tileDeleteCancel() {
+            cancelTileDelete();
+        }
+
+        // INITIALIZATION
+        window.addEventListener('load', () => {
+            const bestScore = parseInt(localStorage.getItem(GAME_CONFIG.STORAGE_KEY) || '0');
+            updateBestScore(bestScore);
+        });
+    </script>
+</body>
+</html>
