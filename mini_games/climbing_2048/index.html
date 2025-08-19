@@ -67,7 +67,7 @@
         .opening-container {
             background: #ffffff;
             border-radius: 20px;
-            padding: 40px;
+            padding: 40px 40px 20px 40px;
             text-align: center;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
             border: 1px solid #e0e0e0;
@@ -78,9 +78,9 @@
         
         /* 흰 박스 내부에 들어간 푸터 스타일 */
         .opening-container #footer-placeholder {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid #e9ecef; /* 구분선 추가 */
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none; 
         }
 
 
@@ -145,6 +145,7 @@
             flex-direction: column;
             gap: 15px;
             margin-top: 25px;
+            margin-bottom: 15px;
         }
 
         .bonus-card-toggle {
@@ -865,7 +866,7 @@
                 <div class="title-text">볼더링 2048</div>
             </div>
             
-            <div class="subtitle">클라이밍 그레이드를 정복하라!!</div>
+            <div class="subtitle">클라이밍 그레이드를 정복하라!!!</div>
             
             <div class="best-score-display">
                 <div class="best-score-label">최고 점수</div>
@@ -874,7 +875,7 @@
             
             <div class="opening-buttons">
                 <button class="opening-btn" onclick="gameStart()">
-                    � 새 게임 시작
+                    🎯 새 게임 시작
                 </button>
                 
                 <div class="bonus-card-toggle">
@@ -2135,4 +2136,3 @@
     </script>
 </body>
 </html>
-�
