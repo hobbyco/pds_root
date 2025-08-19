@@ -891,7 +891,7 @@
 					<script>
 						// 공통 푸터 삽입
 						// mini_games 폴더 안에 있으므로, 상위 폴더의 footer.html을 참조하기 위해 ../ 를 사용합니다.
-						fetch('/../../../footer.html')
+						fetch('/../../footer.html')
 							.then(response => {
 								if (!response.ok) {
 									throw new Error('네트워크 응답이 올바르지 않습니다: ' + response.statusText);
