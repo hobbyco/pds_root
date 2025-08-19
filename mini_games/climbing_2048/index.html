@@ -5,19 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>볼더링 2048 - 클라이밍 2048 게임</title>
 
-    <!-- SEO Meta Tags -->
     <meta name="description" content="클라이밍 테마의 2048 퍼즐 게임, 볼더링 2048! V0부터 V7+까지 클라이밍 그레이드를 합치고 4가지 스킬을 모아 볼더링 마스터가 되어보세요.">
     <meta name="keywords" content="2048, 클라이밍, 볼더링, 퍼즐 게임, 웹게임, 2048 게임, climbing, bouldering, puzzle game">
     
-    <!-- Open Graph Meta Tags for Social Media -->
     <meta property="og:title" content="볼더링 2048 - 클라이밍 2048 게임">
     <meta property="og:description" content="V0부터 V7+까지 클라이밍 그레이드를 합쳐 볼더링 마스터에 도전하세요!">
     <meta property="og:type" content="website">
-    <meta property="og:url" content=""> <!-- 실제 게임 URL을 여기에 입력하세요 -->
-    <meta property="og:image" content=""> <!-- 게임 미리보기 이미지 URL을 여기에 입력하세요 -->
-
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFCTS5DZ6V"></script>
+    <meta property="og:url" content=""> <meta property="og:image" content=""> <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFCTS5DZ6V"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
@@ -25,6 +19,10 @@
 
       gtag('config', 'G-KFCTS5DZ6V');
     </script>
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
 
     <style>
         * {
@@ -38,6 +36,7 @@
             background: #f0f2f5; /* 밝은 회색 배경 */
             color: #333; /* 기본 텍스트 색상을 어둡게 */
             display: flex;
+            flex-direction: column; /* footer를 아래에 위치시키기 위해 flex-direction 변경 */
             justify-content: center;
             align-items: center;
             min-height: 100vh;
@@ -853,7 +852,6 @@
     </style>
 </head>
 <body>
-    <!-- 오프닝화면 -->
     <div class="opening-screen" id="opening-screen">
         <div class="opening-container">
             <div class="opening-title">
@@ -883,52 +881,13 @@
                 
                 <button class="opening-btn secondary" onclick="guideShow()">
                     📖 가이드 보기
-								</button>
-								
-								 <!-- 푸터가 삽입될 위치 -->
-					<div id="footer-placeholder"></div>
-
-					<script>
-						// 공통 푸터 삽입
-						// mini_games 폴더 안에 있으므로, 상위 폴더의 footer.html을 참조하기 위해 ../ 를 사용합니다.
-						fetch('../../footer.html')
-							.then(response => {
-								if (!response.ok) {
-									throw new Error('네트워크 응답이 올바르지 않습니다: ' + response.statusText);
-								}
-								return response.text();
-							})
-							.then(data => {
-								const placeholder = document.getElementById('footer-placeholder');
-								if (placeholder) {
-									placeholder.innerHTML = data;
-									// 푸터에 있는 Lucide 아이콘을 렌더링하기 위해 함수를 다시 호출합니다.
-									if (typeof lucide !== 'undefined') {
-										lucide.createIcons();
-									}
-								}
-							})
-							.catch(error => {
-								console.error('푸터를 불러오는 데 문제가 발생했습니다:', error);
-								const placeholder = document.getElementById('footer-placeholder');
-								if (placeholder) {
-									placeholder.innerHTML = '<p class="text-center text-red-500 py-10">푸터를 불러오지 못했습니다. 로컬 환경에서 테스트하는 경우 브라우저 보안 정책(CORS) 때문일 수 있습니다.</p>';
-								}
-							});
-
-						// 페이지의 나머지 Lucide 아이콘을 렌더링합니다.
-						if (typeof lucide !== 'undefined') {
-							lucide.createIcons();
-						}
-					</script>
-
-
+                </button>
+				
 
             </div>
         </div>
     </div>
 
-    <!-- 가이드 화면 -->
     <div class="guide-screen" id="guide-screen">
         <div class="guide-container">
             <div class="guide-title">
@@ -979,9 +938,7 @@
         </div>
     </div>
 
-    <!-- 메인 게임 화면 -->
     <div class="game-container" id="game-container">
-        <!-- 보너스 카드 받기 화면 (1단계) -->
         <div class="bonus-card-display" id="bonus-card-receive">
             <div class="bonus-card-content">
                 <div class="bonus-card-icon">🎁</div>
@@ -995,7 +952,6 @@
             </div>
         </div>
 
-        <!-- 보너스 카드 사용 확인 화면 (2단계) -->
         <div class="bonus-card-display" id="bonus-card-confirm">
             <div class="bonus-card-content">
                 <div class="bonus-card-icon" id="bonus-card-icon">🎁</div>
@@ -1009,7 +965,6 @@
             </div>
         </div>
 
-        <!-- 타일 삭제 메시지 (게임 상단에 위치) -->
         <div class="bonus-card-display" id="tile-delete-mode" style="display: none;">
             <div class="bonus-card-content" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);">
                 <div class="bonus-card-icon" style="color: #d63384;">🗑️</div>
@@ -1061,8 +1016,7 @@
         </div>
 
         <div class="game-board" id="game-board">
-            <!-- 타일들이 여기에 동적으로 생성됩니다 -->
-        </div>
+            </div>
 
         <div class="controls">
             <button class="btn" onclick="gameNew()">새 게임</button>
@@ -1082,6 +1036,8 @@
     </div>
 
     <div class="achievement-display" id="achievement-display"></div>
+    
+    <div id="footer-placeholder"></div>
 
     <script>
         // 스크립트 부분은 수정하지 않았습니다.
@@ -2160,6 +2116,28 @@
         window.addEventListener('load', () => {
             const bestScore = parseInt(localStorage.getItem(GAME_CONFIG.STORAGE_KEY) || '0');
             updateBestScore(bestScore);
+        });
+    </script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // footer.html 파일을 불러와서 #footer-placeholder에 삽입
+            fetch('../../footer.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('footer-placeholder').innerHTML = data;
+                    // footer가 로드된 후 lucide 아이콘을 렌더링
+                    lucide.createIcons();
+                })
+                .catch(error => {
+                    console.error('Error fetching footer:', error);
+                    document.getElementById('footer-placeholder').innerHTML = '<p style="text-align: center; color: red;">푸터를 불러오는 데 실패했습니다.</p>';
+                });
         });
     </script>
 </body>
