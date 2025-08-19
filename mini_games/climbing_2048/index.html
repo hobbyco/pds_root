@@ -37,11 +37,11 @@
             color: #333;
             display: flex;
             flex-direction: column;
+            justify-content: center; /* 이전 상태로 복원 */
             align-items: center;
             min-height: 100vh;
             padding: 10px;
             overflow-x: hidden;
-            justify-content: space-between; /* body의 컨텐츠를 위아래로 정렬하도록 수정 */
         }
 
         /* 오프닝화면 스타일 */
@@ -51,13 +51,14 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%); /* 부드럽고 밝은 그라데이션 */
+            background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%);
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: center; /* 중앙 컨텐츠를 위로 밀기 위해 flex-start로 변경 가능하나, auto margin으로 처리 */
             align-items: center;
             z-index: 2000;
             animation: openingFadeIn 1s ease-in-out;
+            padding: 20px 0; /* 푸터 공간 확보를 위한 패딩 */
         }
 
         .opening-screen.hidden {
@@ -65,16 +66,23 @@
         }
 
         .opening-container {
-            background: #ffffff; /* 흰색 배경 */
+            background: #ffffff;
             border-radius: 20px;
             padding: 40px;
             text-align: center;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* 부드러운 그림자 */
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
             border: 1px solid #e0e0e0;
             max-width: 400px;
             width: 90%;
             animation: openingSlideUp 0.8s ease-out 0.2s both;
         }
+        
+        /* 푸터를 오프닝 화면 하단에 고정시키는 스타일 추가 */
+        #footer-placeholder {
+            width: 100%;
+            margin-top: auto; /* 이 속성이 푸터를 아래로 밀어냅니다 */
+        }
+
 
         .opening-title {
             display: flex;
@@ -89,30 +97,30 @@
             background: linear-gradient(45deg, #ff6b6b, #feca57);
             border-radius: 15px;
             padding: 15px;
-            color: white; /* 아이콘 색상 추가 */
+            color: white;
             box-shadow: 0 10px 25px rgba(254, 202, 87, 0.3);
         }
 
         .title-text {
             font-size: 2.5em;
             font-weight: bold;
-            background: linear-gradient(45deg, #4a4a4a, #212121); /* 심플하고 강렬한 텍스트 색상 */
+            background: linear-gradient(45deg, #4a4a4a, #212121);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: none; /* 텍스트 그림자 제거 */
+            text-shadow: none;
             letter-spacing: 1px;
         }
 
         .subtitle {
             font-size: 1.1em;
             margin-bottom: 30px;
-            color: #555; /* 어두운 회색으로 변경 */
+            color: #555;
             font-weight: normal;
         }
 
         .best-score-display {
-            background: #f7f9fa; /* 밝은 회색 배경 */
+            background: #f7f9fa;
             border-radius: 15px;
             padding: 15px;
             margin: 20px 0;
@@ -121,14 +129,14 @@
 
         .best-score-label {
             font-size: 0.9em;
-            color: #6c757d; /* 회색으로 변경 */
+            color: #6c757d;
             margin-bottom: 5px;
         }
 
         .best-score-value {
             font-size: 2em;
             font-weight: bold;
-            color: #007bff; /* 포인트 파란색으로 변경 */
+            color: #007bff;
             text-shadow: none;
         }
 
@@ -151,7 +159,7 @@
             align-items: center;
             cursor: pointer;
             user-select: none;
-            color: #333; /* 어두운 텍스트 색상 */
+            color: #333;
             font-size: 1em;
             font-weight: 500;
         }
@@ -172,7 +180,7 @@
         }
 
         .checkbox-container input:checked + .checkmark {
-            background: #007bff; /* 파란색으로 변경 */
+            background: #007bff;
             border-color: #0069d9;
         }
 
@@ -191,16 +199,16 @@
         }
 
         .opening-btn {
-            background: linear-gradient(135deg, #007bff, #0056b3); /* 밝고 심플한 파란색 버튼 */
+            background: linear-gradient(135deg, #007bff, #0056b3);
             color: white;
             border: none;
             padding: 15px 30px;
-            border-radius: 50px; /* 둥글게 변경 */
+            border-radius: 50px;
             font-size: 1.1em;
             font-weight: bold;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.2); /* 그림자 약하게 */
+            box-shadow: 0 8px 25px rgba(0, 123, 255, 0.2);
             text-transform: uppercase;
             letter-spacing: 1px;
         }
@@ -211,7 +219,7 @@
         }
 
         .opening-btn.secondary {
-            background: #6c757d; /* 회색 버튼 */
+            background: #6c757d;
             box-shadow: 0 8px 25px rgba(108, 117, 125, 0.2);
         }
 
@@ -242,7 +250,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%); /* 오프닝과 동일하게 */
+            background: linear-gradient(135deg, #e6f7ff 0%, #ffffff 100%);
             display: none;
             flex-direction: column;
             justify-content: center;
@@ -285,7 +293,7 @@
         }
 
         .guide-section {
-            background: #f8f9fa; /* 밝은 회색 */
+            background: #f8f9fa;
             border-radius: 15px;
             padding: 20px;
             margin-bottom: 20px;
@@ -293,7 +301,7 @@
         }
 
         .guide-section h3 {
-            color: #007bff; /* 파란색으로 변경 */
+            color: #007bff;
             font-size: 1.2em;
             margin-bottom: 10px;
             text-align: center;
@@ -309,13 +317,13 @@
         /* 게임 컨테이너 */
         .game-container {
             text-align: center;
-            background: #ffffff; /* 흰색 배경 */
+            background: #ffffff;
             border-radius: 20px;
-            padding: 20px; /* 패딩 증가 */
+            padding: 20px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
             border: 1px solid #e0e0e0;
             position: relative;
-            max-width: 400px; /* 최대 너비 증가 */
+            max-width: 400px;
             width: 100%;
             opacity: 0;
             transform: translateY(30px);
@@ -329,8 +337,8 @@
 
         h1 {
             font-size: 2.2em;
-            margin-bottom: 15px; /* 마진 증가 */
-            color: #343a40; /* 어두운 색으로 */
+            margin-bottom: 15px;
+            color: #343a40;
             text-shadow: none;
             letter-spacing: 1px;
         }
@@ -343,7 +351,7 @@
         }
 
         .stat-box {
-            background: #f8f9fa; /* 밝은 회색 */
+            background: #f8f9fa;
             padding: 10px;
             border-radius: 10px;
             border: 1px solid #e9ecef;
@@ -362,7 +370,7 @@
         }
 
         .skills-container {
-            background: #f8f9fa; /* 밝은 회색 */
+            background: #f8f9fa;
             padding: 15px;
             border-radius: 15px;
             margin-bottom: 15px;
@@ -383,8 +391,8 @@
         }
 
         .skill-slot {
-            background: #e9ecef; /* 더 밝은 회색 */
-            border: 2px dashed #ced4da; /* 회색 점선 */
+            background: #e9ecef;
+            border: 2px dashed #ced4da;
             border-radius: 10px;
             padding: 10px 5px;
             min-height: 55px;
@@ -412,13 +420,13 @@
         .game-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px; /* 간격 증가 */
-            background: #e9ecef; /* 밝은 회색 */
-            padding: 15px; /* 패딩 증가 */
+            gap: 10px;
+            background: #e9ecef;
+            padding: 15px;
             border-radius: 15px;
             margin: 15px 0;
             border: 1px solid #dee2e6;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05); /* 그림자 약하게 */
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
             touch-action: none;
             user-select: none;
             -webkit-user-select: none;
@@ -426,8 +434,8 @@
         }
 
         .tile {
-            width: auto; /* 자동 너비 */
-            aspect-ratio: 1 / 1; /* 1:1 비율 유지 */
+            width: auto;
+            aspect-ratio: 1 / 1;
             height: auto;
             border-radius: 10px;
             display: flex;
@@ -436,9 +444,9 @@
             align-items: center;
             font-size: 0.8em;
             font-weight: bold;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* 그림자 약간 약하게 */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
             transition: all 0.2s ease-in-out;
-            border: none; /* 테두리 제거 */
+            border: none;
             position: relative;
             cursor: pointer;
         }
@@ -500,7 +508,7 @@
         }
 
         .tile.empty {
-            background: #d6dbe0; /* 빈 타일 색상 변경 */
+            background: #d6dbe0;
             border: 2px dashed #b8c0c8;
         }
 
@@ -516,7 +524,7 @@
         }
 
         .tile.crux {
-            background: linear-gradient(135deg, #6c757d, #343a40) !important; /* 어두운 회색 크럭스 */
+            background: linear-gradient(135deg, #6c757d, #343a40) !important;
             border: 3px solid #495057 !important;
             position: relative;
             display: flex;
@@ -533,7 +541,7 @@
         .tile.crux .crux-counter {
             font-size: 0.7em;
             color: #feca57;
-            background: rgba(0, 0, 0, 0.7); /* 배경은 유지 */
+            background: rgba(0, 0, 0, 0.7);
             border-radius: 8px;
             padding: 2px 6px;
             font-weight: bold;
@@ -543,7 +551,7 @@
         .tile.v0 { 
             background: linear-gradient(135deg, #e74c3c, #c0392b);
             box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
-            color: white; /* 텍스트 색상 흰색으로 변경 */
+            color: white;
         }
         .tile.v1 { 
             background: linear-gradient(135deg, #f39c12, #e67e22);
@@ -614,7 +622,7 @@
 
 
         .controls {
-            margin: 25px 0 10px 0; /* 마진 조정 */
+            margin: 25px 0 10px 0;
             display: flex;
             justify-content: center;
             gap: 10px;
@@ -622,11 +630,11 @@
         }
 
         .btn {
-            background: #6c757d; /* 회색 버튼 */
+            background: #6c757d;
             color: white;
             border: none;
             padding: 12px 25px;
-            border-radius: 50px; /* 둥글게 */
+            border-radius: 50px;
             font-size: 1em;
             font-weight: bold;
             cursor: pointer;
@@ -647,7 +655,6 @@
             background: #5a6268;
         }
         
-        /* '새 게임' 버튼을 파란색으로 강조 */
         .controls .btn:first-child {
             background: #007bff;
         }
@@ -677,7 +684,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7); /* 배경 어둡게 */
+            background: rgba(0, 0, 0, 0.7);
             display: none;
             justify-content: center;
             align-items: center;
@@ -685,8 +692,8 @@
         }
 
         .game-over-content {
-            background: #ffffff; /* 흰색 배경 */
-            color: #333; /* 어두운 텍스트 */
+            background: #ffffff;
+            color: #333;
             padding: 40px;
             border-radius: 25px;
             text-align: center;
@@ -706,7 +713,7 @@
             background: linear-gradient(135deg, #27ae60, #2ecc71);
             color: white;
             padding: 15px 25px;
-            border-radius: 50px; /* 둥글게 */
+            border-radius: 50px;
             font-weight: bold;
             opacity: 0;
             transition: all 0.3s ease;
@@ -735,7 +742,6 @@
             }
         }
 
-        /* 보너스 카드 표시 */
         .bonus-card-display {
             position: absolute;
             top: 0;
@@ -785,7 +791,7 @@
             font-size: 1.5em;
             font-weight: bold;
             margin-bottom: 10px;
-            color: #fff; /* 흰색, 그림자 추가 */
+            color: #fff;
             text-shadow: 1px 1px 5px rgba(0,0,0,0.2);
         }
 
@@ -859,7 +865,7 @@
                 <div class="title-text">볼더링 2048</div>
             </div>
             
-            <div class="subtitle">클라이밍 그레이드를 정복하라!</div>
+            <div class="subtitle">클라이밍 그레이드를 정복하라!!</div>
             
             <div class="best-score-display">
                 <div class="best-score-label">최고 점수</div>
@@ -882,10 +888,10 @@
                 <button class="opening-btn secondary" onclick="guideShow()">
                     📖 가이드 보기
                 </button>
-				
-
             </div>
         </div>
+        
+        <div id="footer-placeholder"></div>
     </div>
 
     <div class="guide-screen" id="guide-screen">
@@ -938,111 +944,107 @@
         </div>
     </div>
 
-    <main style="display: contents;">
-        <div class="game-container" id="game-container">
-            <div class="bonus-card-display" id="bonus-card-receive">
-                <div class="bonus-card-content">
-                    <div class="bonus-card-icon">🎁</div>
-                    <div class="bonus-card-title">보너스 카드 획득!</div>
-                    <div class="bonus-card-description">10턴마다 받는 특별한 보너스 카드입니다!</div>
-                    <div class="bonus-card-question">카드를 열어보시겠습니까?</div>
-                    <div class="bonus-card-actions">
-                        <button class="btn" onclick="bonusCardOpen()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">카드 열기</button>
-                        <button class="btn" onclick="bonusCardDiscard()" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">버리기</button>
-                    </div>
+    <div class="game-container" id="game-container">
+        <div class="bonus-card-display" id="bonus-card-receive">
+            <div class="bonus-card-content">
+                <div class="bonus-card-icon">🎁</div>
+                <div class="bonus-card-title">보너스 카드 획득!</div>
+                <div class="bonus-card-description">10턴마다 받는 특별한 보너스 카드입니다!</div>
+                <div class="bonus-card-question">카드를 열어보시겠습니까?</div>
+                <div class="bonus-card-actions">
+                    <button class="btn" onclick="bonusCardOpen()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">카드 열기</button>
+                    <button class="btn" onclick="bonusCardDiscard()" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">버리기</button>
                 </div>
-            </div>
-
-            <div class="bonus-card-display" id="bonus-card-confirm">
-                <div class="bonus-card-content">
-                    <div class="bonus-card-icon" id="bonus-card-icon">🎁</div>
-                    <div class="bonus-card-title" id="bonus-card-title">보너스 카드!</div>
-                    <div class="bonus-card-description" id="bonus-card-description">보너스 카드를 받았습니다!</div>
-                    <div class="bonus-card-question" id="bonus-card-question">사용하시겠습니까?</div>
-                    <div class="bonus-card-actions" id="bonus-card-actions">
-                        <button class="btn" onclick="bonusConfirm()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">예</button>
-                        <button class="btn" onclick="bonusDecline()" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">아니오</button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="bonus-card-display" id="tile-delete-mode" style="display: none;">
-                <div class="bonus-card-content" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);">
-                    <div class="bonus-card-icon" style="color: #d63384;">🗑️</div>
-                    <div class="bonus-card-title" style="color: #d63384;">타일 삭제</div>
-                    <div class="bonus-card-description" style="color: #333;">어느 타일을 삭제하시겠습니까?<br>삭제할 타일을 클릭해주세요.</div>
-                    <div class="bonus-card-actions">
-                        <button class="btn" onclick="tileDeleteCancel()">취소</button>
-                    </div>
-                </div>
-            </div>
-
-            <h1>🧗‍♂️ Boulder Master</h1>
-            
-            <div class="stats-container">
-                <div class="stat-box">
-                    <div class="stat-label">점수</div>
-                    <div class="stat-value" id="score">0</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">최고 점수</div>
-                    <div class="stat-value" id="best-score">0</div>
-                </div>
-                <div class="stat-box">
-                    <div class="stat-label">움직임</div>
-                    <div class="stat-value" id="move-count">0</div>
-                </div>
-            </div>
-
-            <div class="skills-container">
-                <div class="skills-title">🎯 클라이밍 스킬 수집</div>
-                <div class="skills-grid">
-                    <div class="skill-slot" id="skill-grip">
-                        <div>💪</div>
-                        <div>그립력</div>
-                    </div>
-                    <div class="skill-slot" id="skill-core">
-                        <div>🏋️</div>
-                        <div>코어</div>
-                    </div>
-                    <div class="skill-slot" id="skill-dynamic">
-                        <div>🚀</div>
-                        <div>다이나믹</div>
-                    </div>
-                    <div class="skill-slot" id="skill-balance">
-                        <div>⚖️</div>
-                        <div>밸런스</div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="game-board" id="game-board">
-                </div>
-
-            <div class="controls">
-                <button class="btn" onclick="gameNew()">새 게임</button>
-                <button class="btn" onclick="mainMenuShow()">메인 메뉴</button>
-                <button class="btn shuffle-btn" id="shuffle-btn" onclick="tilesShuffleFunc()" style="display: none;">🎲</button>
             </div>
         </div>
 
-        <div class="game-over" id="game-over">
-            <div class="game-over-content">
-                <h2 id="game-over-title">세션 종료!</h2>
-                <p id="game-over-message"></p>
-                <p>점수: <span id="final-score"></span></p>
-                <button class="btn" onclick="gameNew()" style="background: #007bff;">다시 도전</button>
-                <button class="btn" onclick="mainMenuShow()">메인 화면</button>
+        <div class="bonus-card-display" id="bonus-card-confirm">
+            <div class="bonus-card-content">
+                <div class="bonus-card-icon" id="bonus-card-icon">🎁</div>
+                <div class="bonus-card-title" id="bonus-card-title">보너스 카드!</div>
+                <div class="bonus-card-description" id="bonus-card-description">보너스 카드를 받았습니다!</div>
+                <div class="bonus-card-question" id="bonus-card-question">사용하시겠습니까?</div>
+                <div class="bonus-card-actions" id="bonus-card-actions">
+                    <button class="btn" onclick="bonusConfirm()" style="background: linear-gradient(135deg, #27ae60, #2ecc71);">예</button>
+                    <button class="btn" onclick="bonusDecline()" style="background: linear-gradient(135deg, #e74c3c, #c0392b);">아니오</button>
+                </div>
             </div>
         </div>
 
-        <div class="achievement-display" id="achievement-display"></div>
-    </main>
+        <div class="bonus-card-display" id="tile-delete-mode" style="display: none;">
+            <div class="bonus-card-content" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 99%, #fecfef 100%);">
+                <div class="bonus-card-icon" style="color: #d63384;">🗑️</div>
+                <div class="bonus-card-title" style="color: #d63384;">타일 삭제</div>
+                <div class="bonus-card-description" style="color: #333;">어느 타일을 삭제하시겠습니까?<br>삭제할 타일을 클릭해주세요.</div>
+                <div class="bonus-card-actions">
+                    <button class="btn" onclick="tileDeleteCancel()">취소</button>
+                </div>
+            </div>
+        </div>
+
+        <h1>🧗‍♂️ Boulder Master</h1>
+        
+        <div class="stats-container">
+            <div class="stat-box">
+                <div class="stat-label">점수</div>
+                <div class="stat-value" id="score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">최고 점수</div>
+                <div class="stat-value" id="best-score">0</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-label">움직임</div>
+                <div class="stat-value" id="move-count">0</div>
+            </div>
+        </div>
+
+        <div class="skills-container">
+            <div class="skills-title">🎯 클라이밍 스킬 수집</div>
+            <div class="skills-grid">
+                <div class="skill-slot" id="skill-grip">
+                    <div>💪</div>
+                    <div>그립력</div>
+                </div>
+                <div class="skill-slot" id="skill-core">
+                    <div>🏋️</div>
+                    <div>코어</div>
+                </div>
+                <div class="skill-slot" id="skill-dynamic">
+                    <div>🚀</div>
+                    <div>다이나믹</div>
+                </div>
+                <div class="skill-slot" id="skill-balance">
+                    <div>⚖️</div>
+                    <div>밸런스</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-board" id="game-board">
+            </div>
+
+        <div class="controls">
+            <button class="btn" onclick="gameNew()">새 게임</button>
+            <button class="btn" onclick="mainMenuShow()">메인 메뉴</button>
+            <button class="btn shuffle-btn" id="shuffle-btn" onclick="tilesShuffleFunc()" style="display: none;">🎲</button>
+        </div>
+    </div>
+
+    <div class="game-over" id="game-over">
+        <div class="game-over-content">
+            <h2 id="game-over-title">세션 종료!</h2>
+            <p id="game-over-message"></p>
+            <p>점수: <span id="final-score"></span></p>
+            <button class="btn" onclick="gameNew()" style="background: #007bff;">다시 도전</button>
+            <button class="btn" onclick="mainMenuShow()">메인 화면</button>
+        </div>
+    </div>
+
+    <div class="achievement-display" id="achievement-display"></div>
     
-    <div id="footer-placeholder"></div>
 
     <script>
-        // 스크립트 부분은 수정하지 않았습니다.
         // GAME CONSTANTS
         const GAME_CONFIG = {
             BOARD_SIZE: 4,
@@ -1108,7 +1110,6 @@
         }
 
         function isDeletableTile(value) {
-            // 빈 타일, 크럭스 타일, 스킬 타일은 삭제 불가
             return value !== 0 && !isCruxTile(value) && !isSkillTile(value);
         }
 
@@ -1118,7 +1119,7 @@
                     if (isCruxTile(board[i][j])) {
                         board[i][j].remaining--;
                         if (board[i][j].remaining <= 0) {
-                            board[i][j] = 0; // 크럭스 제거
+                            board[i][j] = 0;
                         }
                     }
                 }
@@ -1166,7 +1167,7 @@
                 message.textContent = '4가지 스킬을 모두 마스터했습니다! 당신은 진정한 볼더링 고수입니다!';
             } else {
                 title.textContent = '세션 종료';
-                message.textContent = '더 이상 홀드를 잡을 수 없습니다. 다시 도전해보세요!';
+                message.textContent = '더 이상 홀드를 잡을 수 없습니다. <br> 다시 도전해보세요!';
             }
             
             finalScore.textContent = score;
@@ -1298,7 +1299,7 @@
                 shuffle_card: {
                     icon: '🎲',
                     title: '무작위 재배치 카드!',
-                    description: '무작위로 게임 타일을 섞을 수 있습니다 (나중에 사용 가능)'
+                    description: '무작위로 게임 타일을 섞을 수 있습니다 <br> (나중에 사용 가능)'
                 },
                 crux: {
                     icon: '🪨',
@@ -1619,10 +1620,8 @@
             }
             
             setupEventListeners() {
-                // 이벤트 리스너가 중복으로 등록되지 않도록 기존 리스너 제거
                 this.removeEventListeners();
 
-                // 키보드 이벤트
                 this.keydownHandler = (e) => {
                     if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
                     
@@ -1642,7 +1641,6 @@
                 
                 document.addEventListener('keydown', this.keydownHandler);
 
-                // 터치 이벤트 (모바일 지원)
                 this.touchStartX = 0;
                 this.touchStartY = 0;
 
@@ -1651,9 +1649,8 @@
                 this.touchStartHandler = (e) => {
                     if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
                     
-                    // If the touch starts on a button, do not initiate swipe tracking.
                     if (e.target.closest('.btn')) {
-                        this.touchStartX = null; // Use null to indicate no swipe should be processed.
+                        this.touchStartX = null;
                         this.touchStartY = null;
                         return;
                     }
@@ -1665,13 +1662,12 @@
 
                 this.touchMoveHandler = (e) => {
                     if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
-                    e.preventDefault(); // 스크롤 방지
+                    e.preventDefault();
                 };
 
                 this.touchEndHandler = (e) => {
                     if (this.gameOver || isBonusCardOpen || isDeleteMode) return;
                     
-                    // If swipe tracking was not initiated, do nothing.
                     if (this.touchStartX === null || this.touchStartY === null) {
                         return;
                     }
@@ -1689,7 +1685,6 @@
                 gameContainer.addEventListener('touchmove', this.touchMoveHandler, { passive: false });
                 gameContainer.addEventListener('touchend', this.touchEndHandler, { passive: false });
 
-                // 마우스 이벤트 (데스크톱에서 드래그 지원)
                 this.mouseStartX = 0;
                 this.mouseStartY = 0;
                 this.isMouseDown = false;
@@ -1751,23 +1746,21 @@
             }
 
             handleSwipe(startX, startY, endX, endY) {
-                const minSwipeDistance = 50; // 최소 스와이프 거리를 늘림
+                const minSwipeDistance = 50;
                 const deltaX = endX - startX;
                 const deltaY = endY - startY;
                 
                 if (Math.abs(deltaX) < minSwipeDistance && Math.abs(deltaY) < minSwipeDistance) {
-                    return; // 너무 짧은 스와이프는 무시
+                    return;
                 }
                 
                 if (Math.abs(deltaX) > Math.abs(deltaY)) {
-                    // 수평 스와이프
                     if (deltaX > 0) {
                         this.handleMove('right');
                     } else {
                         this.handleMove('left');
                     }
                 } else {
-                    // 수직 스와이프
                     if (deltaY > 0) {
                         this.handleMove('down');
                     } else {
@@ -2123,7 +2116,6 @@
     
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            // footer.html 파일을 불러와서 #footer-placeholder에 삽입
             fetch('../../footer.html')
                 .then(response => {
                     if (!response.ok) {
@@ -2133,7 +2125,6 @@
                 })
                 .then(data => {
                     document.getElementById('footer-placeholder').innerHTML = data;
-                    // footer가 로드된 후 lucide 아이콘을 렌더링
                     lucide.createIcons();
                 })
                 .catch(error => {
