@@ -1,4 +1,105 @@
-<!DOCTYPE html>
+// Initialize on page load
+        window.addEventListener('load', () => {
+            const bestScore = parseInt(localStorage.getItem(CONFIG.STORAGE_KEY) || '0');
+            UI.updateBestScore(bestScore);
+            
+            // PWA 서비스 워커 등록
+            PWAManager.init();
+        });
+
+        // PWA Manager
+        const PWAManager = {
+            init() {
+                this.registerServiceWorker();
+                this.setupInstallPrompt();
+                this.addToHomeScreenPrompt();
+            },
+
+            async registerServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    try {
+                        const registration = await navigator.serviceWorker.register('sw.js');
+                        console.log('Service Worker 등록 성공:', registration);
+                    } catch (error) {
+                        console.log('Service Worker 등록 실패:', error);
+                    }
+                }
+            },
+
+            setupInstallPrompt() {
+                let deferredPrompt;
+
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    this.showInstallButton(deferredPrompt);
+                });
+
+                window.addEventListener('appinstalled', () => {
+                    console.log('PWA가 설치되었습니다!');
+                    this.hideInstallButton();
+                });
+            },
+
+            showInstallButton(deferredPrompt) {
+                // 설치 버튼을 메인 메뉴에 추가
+                const openingButtons = document.querySelector('.opening-buttons');
+                if (openingButtons && !document.getElementById('install-btn')) {
+                    const installBtn = document.createElement('button');
+                    installBtn.id = 'install-btn';
+                    installBtn.className = 'btn warning';
+                    installBtn.innerHTML = '📱 앱으로 설치하기';
+                    installBtn.onclick = () => this.installApp(deferredPrompt);
+                    
+                    // 가이드 버튼 앞에 추가
+                    const guideBtn = openingButtons.querySelector('button:last-child');
+                    openingButtons.insertBefore(installBtn, guideBtn);
+                }
+            },
+
+            hideInstallButton() {
+                const installBtn = document.getElementById('install-btn');
+                if (installBtn) {
+                    installBtn.remove();
+                }
+            },
+
+            async installApp(deferredPrompt) {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log('설치 결과:', outcome);
+                    deferredPrompt = null;
+                    this.hideInstallButton();
+                }
+            },
+
+            addToHomeScreenPrompt() {
+                // iOS Safari용 설치 안내
+                if (this.isIOS() && !this.isInStandaloneMode()) {
+                    setTimeout(() => {
+                        if (!localStorage.getItem('ios-install-prompt-shown')) {
+                            UI.showAchievement('Safari에서 "홈 화면에 추가"로 앱처럼 사용하세요!');
+                            localStorage.setItem('ios-install-prompt-shown', 'true');
+                        }
+                    }, 3000);
+                }
+            },
+
+            isIOS() {
+                return /iPad|iPhone|iPod/.test(navigator.userAgent);
+            },
+
+            isInStandaloneMode() {
+                return window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true;
+            }
+        };
+    </script>
+    
+    <!-- PWA 매니페스트 파일을 위한 스크립트 -->
+    <script>
+        // 매니페스트 동적 생성 (실<!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
@@ -10,6 +111,34 @@
     <meta property="og:title" content="볼더링 2048 - 클라이밍 2048 게임">
     <meta property="og:description" content="V0부터 V7+까지 클라이밍 그레이드를 합쳐 볼더링 마스터에 도전하세요!">
     <meta property="og:type" content="website">
+    
+    <!-- PWA 관련 메타 태그 -->
+    <meta name="theme-color" content="#007bff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="볼더링 2048">
+    
+    <!-- PWA 매니페스트 -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- 파비콘 및 아이콘 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/icon-192.png">
+    <link rel="apple-touch-icon" href="/icon-192.png">
+    
+    <!-- PWA 관련 메타 태그 -->
+    <meta name="theme-color" content="#007bff">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="볼더링 2048">
+    
+    <!-- PWA 매니페스트 -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- 파비콘 및 아이콘 -->
+    <link rel="icon" type="image/png" sizes="32x32" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧗‍♂️</text></svg>">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧗‍♂️</text></svg>">
 
     <style>
         * {
@@ -2071,7 +2200,99 @@
         window.addEventListener('load', () => {
             const bestScore = parseInt(localStorage.getItem(CONFIG.STORAGE_KEY) || '0');
             UI.updateBestScore(bestScore);
+            
+            // PWA 서비스 워커 등록
+            PWAManager.init();
         });
+
+        // PWA Manager
+        const PWAManager = {
+            init() {
+                this.registerServiceWorker();
+                this.setupInstallPrompt();
+                this.addToHomeScreenPrompt();
+            },
+
+            async registerServiceWorker() {
+                if ('serviceWorker' in navigator) {
+                    try {
+                        const registration = await navigator.serviceWorker.register('/sw.js');
+                        console.log('Service Worker 등록 성공:', registration);
+                    } catch (error) {
+                        console.log('Service Worker 등록 실패:', error);
+                    }
+                }
+            },
+
+            setupInstallPrompt() {
+                let deferredPrompt;
+
+                window.addEventListener('beforeinstallprompt', (e) => {
+                    e.preventDefault();
+                    deferredPrompt = e;
+                    this.showInstallButton(deferredPrompt);
+                });
+
+                window.addEventListener('appinstalled', () => {
+                    console.log('PWA가 설치되었습니다!');
+                    this.hideInstallButton();
+                });
+            },
+
+            showInstallButton(deferredPrompt) {
+                // 설치 버튼을 메인 메뉴에 추가
+                const openingButtons = document.querySelector('.opening-buttons');
+                if (openingButtons && !document.getElementById('install-btn')) {
+                    const installBtn = document.createElement('button');
+                    installBtn.id = 'install-btn';
+                    installBtn.className = 'btn warning';
+                    installBtn.innerHTML = '📱 앱으로 설치하기';
+                    installBtn.onclick = () => this.installApp(deferredPrompt);
+                    
+                    // 가이드 버튼 앞에 추가
+                    const guideBtn = openingButtons.querySelector('button:last-child');
+                    openingButtons.insertBefore(installBtn, guideBtn);
+                }
+            },
+
+            hideInstallButton() {
+                const installBtn = document.getElementById('install-btn');
+                if (installBtn) {
+                    installBtn.remove();
+                }
+            },
+
+            async installApp(deferredPrompt) {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    console.log('설치 결과:', outcome);
+                    deferredPrompt = null;
+                    this.hideInstallButton();
+                }
+            },
+
+            addToHomeScreenPrompt() {
+                // iOS Safari용 설치 안내
+                if (this.isIOS() && !this.isInStandaloneMode()) {
+                    setTimeout(() => {
+                        if (!localStorage.getItem('ios-install-prompt-shown')) {
+                            UI.showAchievement('Safari에서 "홈 화면에 추가"로 앱처럼 사용하세요!');
+                            localStorage.setItem('ios-install-prompt-shown', 'true');
+                        }
+                    }, 3000);
+                }
+            },
+
+            isIOS() {
+                return /iPad|iPhone|iPod/.test(navigator.userAgent);
+            },
+
+            isInStandaloneMode() {
+                return window.matchMedia('(display-mode: standalone)').matches ||
+                       window.navigator.standalone === true;
+            }
+        };
     </script>
 </body>
 </html>
