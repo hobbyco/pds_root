@@ -2,7 +2,7 @@
   "name": "볼더링 2048 - 클라이밍 퍼즐 게임",
   "short_name": "볼더링 2048",
   "description": "V0부터 V7+까지 클라이밍 그레이드를 합쳐 볼더링 마스터에 도전하세요!",
-  "start_url": "./index.html",
+  "start_url": "./index_no_footer_refac.html",
   "display": "standalone",
   "background_color": "#f0f2f5",
   "theme_color": "#007bff",
