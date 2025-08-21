@@ -1,7 +1,7 @@
 const CACHE_NAME = 'bouldering-2048-v1';
 const urlsToCache = [
   './',
-  './index.html',
+  './index_no_footer_refac.html',
   './manifest.json',
   './icon-192.png',
   './icon-512.png'
