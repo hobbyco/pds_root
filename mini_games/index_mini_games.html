@@ -17,7 +17,7 @@
     <!-- SEO - Basic Meta Tags -->
     <title>pdongsoo의 바이브 코딩 - 미니게임</title>
     <meta name="description" content="pdongsoo의 바이브 코딩 자료실에서 제공하는 간단한 미니게임들을 즐겨보세요.">
-    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 유물 사냥꾼, 좀비 스네이크, 클라이밍 2048, 간단한 게임">
+    <meta name="keywords" content="pdongsoo, 미니게임, 웹게임, 숫자야구, 유물 사냥꾼, 좀비 스네이크, 클라이밍 2048, 블랙잭, 간단한 게임">
     <meta name="author" content="pdongsoo">
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -50,6 +50,9 @@
         .card-border-cyan {
             border-top-color: #06b6d4; /* Cyan color for 2048 game */
         }
+        .card-border-indigo {
+            border-top-color: #6366f1; /* Indigo color for Blackjack */
+        }
         .gradient-text {
             background: linear-gradient(to right, #8b5cf6, #ec4899);
             -webkit-background-clip: text;
@@ -80,7 +83,7 @@
 
 
         <!-- 게임 링크 섹션 -->
-        <section class="container mx-auto px-6 mt-16">
+        <section class="container mx-auto px-6 mt-16 pb-20">
             <div class="flex flex-wrap justify-center items-stretch gap-10">
                 
                 <!-- 숫자 야구 게임 카드 -->
@@ -88,13 +91,11 @@
                     <a href="https://hobbyco.github.io/pds_root/mini_games/num_baseball/single_game.html" 
                        class="link-card card-border-red block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
                         <div class="flex justify-center mb-4">
-                            <!-- 야구공 아이콘을 실밥이 있는 SVG로 변경 -->
                             <svg class="w-12 h-12 text-red-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <title>야구공 아이콘</title>
                                 <circle cx="12" cy="12" r="10" fill="white" stroke="currentColor" stroke-width="1.5"/>
                                 <path d="M18.364 5.636C16.676 4.324 14.482 3.5 12 3.5C9.518 3.5 7.324 4.324 5.636 5.636" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
                                 <path d="M5.636 18.364C7.324 19.676 9.518 20.5 12 20.5C14.482 20.5 16.676 19.676 18.364 18.364" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-                                <!-- Stitches -->
                                 <path d="M7.5 7.2L9 8.5" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
                                 <path d="M10.5 5.5L11.8 6.8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
                                 <path d="M13.5 5.5L12.2 6.8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
@@ -126,7 +127,6 @@
                             </svg>
                         </div>
                         <h2 class="text-2xl font-bold text-gray-800">유물 사냥꾼과 시간의 저주</h2>
-                        <!-- 카드 높이를 맞추기 위해 줄바꿈과 공백 문자를 추가합니다. -->
                         <p class="text-gray-500 mt-2">유물을 찾아 저주를 풀어보세요!<br>&nbsp;</p>
                     </a>
                 </article>
@@ -145,7 +145,6 @@
                             </svg>
                         </div>
                         <h2 class="text-2xl font-bold text-gray-800">좀비 스네이크 (pc only)</h2>
-                        <!-- 카드 높이를 맞추기 위해 줄바꿈과 공백 문자를 추가합니다. -->
                         <p class="text-gray-500 mt-2">나는 좀비인가, 뱀인가<br>&nbsp;</p>
                     </a>
                 </article>
@@ -158,8 +157,19 @@
                             <i data-lucide="blocks" class="w-12 h-12 text-cyan-500"></i>
                         </div>
                         <h2 class="text-2xl font-bold text-gray-800">클라이밍 2048</h2>
-                        <!-- 카드 높이를 맞추기 위해 줄바꿈과 공백 문자를 추가합니다. -->
                         <p class="text-gray-500 mt-2">같은 홀드를 합쳐<br>새로운 홀드를 만드세요!</p>
+                    </a>
+                </article>
+
+                <!-- 블랙잭 연습 게임 카드 -->
+                <article class="flex">
+                    <a href="https://hobbyco.github.io/pds_root/mini_games/blackjack/index.html"
+                       class="link-card card-border-indigo block w-full md:w-96 p-8 bg-white border border-gray-200 rounded-lg text-center shadow-md">
+                        <div class="flex justify-center mb-4">
+                            <i data-lucide="clover" class="w-12 h-12 text-indigo-500"></i>
+                        </div>
+                        <h2 class="text-2xl font-bold text-gray-800">블랙잭 연습</h2>
+                        <p class="text-gray-500 mt-2">블랙잭 혼자 연습해보기<br>&nbsp;</p>
                     </a>
                 </article>
 
@@ -172,7 +182,6 @@
 
     <script>
         // 공통 푸터 삽입
-        // mini_games 폴더 안에 있으므로, 상위 폴더의 footer.html을 참조하기 위해 ../ 를 사용합니다.
         fetch('../footer.html')
             .then(response => {
                 if (!response.ok) {
@@ -184,7 +193,6 @@
                 const placeholder = document.getElementById('footer-placeholder');
                 if (placeholder) {
                     placeholder.innerHTML = data;
-                    // 푸터에 있는 Lucide 아이콘을 렌더링하기 위해 함수를 다시 호출합니다.
                     if (typeof lucide !== 'undefined') {
                         lucide.createIcons();
                     }
@@ -198,12 +206,11 @@
                 }
             });
 
-        // 페이지의 나머지 Lucide 아이콘을 렌더링합니다.
         if (typeof lucide !== 'undefined') {
             lucide.createIcons();
         }
     </script>
 
 </body>
-<!-- Last updated: 2025-08-19 12:39 KST -->
+<!-- Last updated: 2026-02-06 15:12 KST -->
 </html>
