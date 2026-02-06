@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <!-- Google Analytics (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KFCTS5DZ6V"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-KFCTS5DZ6V');
+    </script>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    
+    <!-- SEO Meta Tags -->
+    <title>블랙잭 마스터 - AI 전략 시뮬레이터 & 트레이닝</title>
+    <meta name="description" content="AI 전략 어시스턴트와 함께하는 고급 블랙잭 시뮬레이터입니다. 실시간 확률 분석과 상세한 전략 설명을 통해 블랙잭 실력을 향상시키세요.">
+    <meta name="keywords" content="블랙잭, 블랙잭 시뮬레이터, 블랙잭 전략, 카지노 게임, AI 전략, 블랙잭 연습, 확률 분석">
+    <meta name="author" content="Blackjack Master Team">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://your-domain.com/">
+    <meta property="og:title" content="블랙잭 마스터 - AI 전략 시뮬레이터">
+    <meta property="og:description" content="수학적 확률에 기반한 최적의 블랙잭 전략을 배우고 실습하세요.">
+    <meta property="og:image" content="https://your-domain.com/og-image.jpg">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap');
+
+        :root {
+            --gold: #FFD700;
+            --success: #4CAF50;
+            --danger: #FF5252;
+            --bg-dark: #0f172a;
+            --card-white: #ffffff;
+            --accent-blue: #3b82f6;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-dark);
+            background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            color: #f8fafc;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .game-container {
+            width: 95%;
+            max-width: 900px;
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            padding: 30px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        /* 언어 선택기 */
+        .lang-selector {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .lang-selector select {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 5px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.8em;
+            outline: none;
+        }
+
+        .header-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px 20px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            font-size: 1.0em;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 25px;
+        }
+
+        .stat-item span {
+            color: var(--gold);
+            font-weight: 800;
+            margin-left: 5px;
+        }
+
+        .hand-section {
+            margin: 15px 0;
+            padding: 15px;
+            border-radius: 20px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+
+        .hand-section.active {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 20px rgba(59, 130, 246, 0.15);
+            transform: scale(1.02);
+        }
+
+        .hand-label {
+            font-size: 0.85em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #94a3b8;
+            margin-bottom: 8px;
+        }
+
+        .score-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+
+        .cards-display {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            min-height: 100px;
+            margin-top: 10px;
+            perspective: 1000px;
+            flex-wrap: wrap;
+        }
+
+        .card {
+            width: 65px;
+            height: 90px;
+            background: var(--card-white);
+            color: #1e293b;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6em;
+            font-weight: 700;
+            box-shadow: 0 8px 12px -3px rgba(0, 0, 0, 0.3);
+            animation: dealIn 0.5s ease-out backwards;
+            user-select: none;
+        }
+
+        @keyframes dealIn {
+            from { transform: translateY(-30px) rotateY(90deg); opacity: 0; }
+            to { transform: translateY(0) rotateY(0); opacity: 1; }
+        }
+
+        .card.red { color: var(--danger); }
+        .card.back { 
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            color: transparent;
+            border: 2px solid white;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        button {
+            padding: 15px 10px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        button:active { transform: translateY(2px); }
+        button:disabled { 
+            opacity: 0.2; 
+            cursor: not-allowed; 
+            filter: grayscale(1); 
+        }
+
+        .btn-primary { background: var(--accent-blue); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-warning { background: var(--gold); color: #1e293b; }
+        .btn-deal { 
+            grid-column: 1 / -1; 
+            background: white; 
+            color: var(--bg-dark);
+            font-size: 1.1em;
+            margin-top: 5px;
+            padding: 18px;
+        }
+
+        .analysis-panel {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 18px;
+            text-align: left;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .analysis-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: var(--gold);
+            font-weight: 600;
+            font-size: 0.95em;
+        }
+
+        .feedback-msg {
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .strategy-reason {
+            display: block;
+            margin-top: 8px;
+            font-size: 0.85em;
+            color: #94a3b8;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 8px;
+        }
+
+        #result-banner {
+            font-size: 1.3em;
+            font-weight: 800;
+            color: var(--gold);
+            margin: 15px 0;
+            min-height: 1.5em;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* PC 화면 최적화 (600px 이상) */
+        @media (min-width: 600px) {
+            .game-container { padding: 40px; }
+            .controls { grid-template-columns: repeat(4, 1fr); }
+            .card { width: 75px; height: 110px; font-size: 1.9em; }
+            .header-stats { font-size: 1.1em; padding: 15px 30px; }
+            #result-banner { font-size: 1.6em; }
+            .feedback-msg { font-size: 1.05em; }
+            .btn-deal { font-size: 1.2em; padding: 20px; }
+        }
+
+        /* 모바일 작은 화면 최적화 (350px 이하) */
+        @media (max-width: 350px) {
+            .card { width: 55px; height: 80px; font-size: 1.4em; }
+            .header-stats { flex-direction: column; gap: 5px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="game-container">
+    <div class="lang-selector">
+        <select id="language-select">
+            <option value="ko">한국어 (KR)</option>
+            <option value="en">English (EN)</option>
+        </select>
+    </div>
+
+    <div class="header-stats">
+        <div class="stat-item"><span id="txt-capital-label">자산</span> <span>$<span id="balance">1000</span></span></div>
+        <div class="stat-item"><span id="txt-stake-label">판돈</span> <span>$<span id="bet">50</span></span></div>
+    </div>
+
+    <div id="dealer-area" class="hand-section">
+        <div class="hand-label"><span id="txt-dealer-label">딜러</span> <span id="dealer-score-val" class="score-badge">?</span></div>
+        <div id="dealer-cards" class="cards-display"></div>
+    </div>
+
+    <div id="player-hands-container"></div>
+
+    <div id="result-banner"></div>
+
+    <div class="controls">
+        <button id="hit-btn" class="btn-success">Hit</button>
+        <button id="hold-btn" class="btn-danger">Hold</button>
+        <button id="double-btn" class="btn-warning">Double</button>
+        <button id="split-btn" class="btn-primary" style="background: #9333ea;">Split</button>
+        <button id="deal-btn" class="btn-deal">새 게임 시작</button>
+    </div>
+
+    <div class="analysis-panel">
+        <div class="analysis-header" id="txt-strategy-header">💡 AI 전략 어시스턴트</div>
+        <div id="analysis-content" class="feedback-msg">게임을 시작하면 실시간으로 최적의 전략 피드백을 드립니다.</div>
+    </div>
+</div>
+
+<script>
+    const i18n = {
+        ko: {
+            capital: "자산", stake: "판돈", dealer: "딜러", hand: "핸드", deal: "새 게임 시작",
+            hit: "히트 (Hit)", hold: "스테이 (Hold)", double: "더블 다운", split: "스플릿",
+            strategyHeader: "💡 AI 전략 어시스턴트",
+            strategyStart: "게임을 시작하면 실시간으로 최적의 전략 피드백을 드립니다.",
+            perfect: "✔ 완벽한 결정입니다!",
+            perfectDesc: "최적의 수는 <b>{optimal}</b>이었습니다.",
+            error: "✘ 전략적 오류가 있습니다.",
+            errorDesc: "당신은 <b>{action}</b>을(를) 선택했지만, 기본 전략은 <b>{optimal}</b>을(를) 권장합니다.",
+            bust: "버스트 (Bust)", win: "승리", lose: "패배", push: "무승부", blackjack: "블랙잭",
+            reasons: {
+                splitAA: "A-A 스플릿은 블랙잭 최고의 전략입니다. 각각의 A가 강력한 핸드(21)를 만들 기회를 제공합니다.",
+                split88: "8-8은 합계가 16으로 가장 불리한 핸드입니다. 스플릿하여 더 나은 핸드를 노리는 것이 수학적으로 유리합니다.",
+                split10: "10-10은 이미 20점으로 매우 강력한 핸드입니다. 이를 찢는 것은 승률을 낮추는 행위입니다.",
+                splitPairWeak: "딜러의 오픈 카드가 약하므로(2-6), 스플릿을 통해 판돈을 늘리고 딜러의 버스트를 기다리는 것이 좋습니다.",
+                standHigh: "17점 이상은 추가 카드를 받을 때 버스트될 확률이 매우 높습니다. 딜러의 결과를 기다리는 것이 안전합니다.",
+                standDealerWeak: "플레이어의 점수가 낮더라도 딜러의 오픈 카드가 2-6이면 딜러가 버스트될 확률이 높으므로 멈추는 것이 유리합니다.",
+                hitToImprove: "딜러의 오픈 카드가 강하므로(7-A), 현재 점수로는 이기기 어렵습니다. 위험을 감수하고 점수를 높여야 합니다.",
+                double11: "합계 11은 다음 카드에서 10점 카드를 받아 21을 만들 확률이 약 30%로 매우 높습니다.",
+                doubleStrong: "내 패의 개선 확률이 높고 딜러는 버스트될 위험이 큰 상황이므로 판돈을 두 배로 늘려 수익을 극대화합니다.",
+                softImprove: "A를 포함한 소프트 핸드는 버스트 위험 없이 패를 개선할 수 있는 무료 기회입니다."
+            }
+        },
+        en: {
+            capital: "CAPITAL", stake: "STAKE", dealer: "DEALER", hand: "HAND", deal: "DEAL NEW HAND",
+            hit: "HIT", hold: "HOLD", double: "DOUBLE", split: "SPLIT",
+            strategyHeader: "💡 AI STRATEGY ASSISTANT",
+            strategyStart: "Start a new game to receive real-time strategy feedback.",
+            perfect: "✔ PERFECT DECISION!",
+            perfectDesc: "The optimal move was <b>{optimal}</b>.",
+            error: "✘ STRATEGIC ERROR",
+            errorDesc: "You chose <b>{action}</b>, but basic strategy suggests <b>{optimal}</b>.",
+            bust: "BUST", win: "WIN", lose: "LOSE", push: "PUSH", blackjack: "BLACKJACK",
+            reasons: {
+                splitAA: "Splitting Aces is the best move as it gives you two chances to hit 21 with a single card.",
+                split88: "A hard 16 is the worst total. Splitting 8s breaks it into two hands with better potential.",
+                split10: "A total of 20 is a very strong hand. Splitting 10s significantly lowers your win probability.",
+                splitPairWeak: "The dealer shows a weak upcard (2-6). Splitting allows you to maximize profit on their high bust risk.",
+                standHigh: "With 17+, the risk of busting is extremely high. It's safer to stand and wait for the dealer.",
+                standDealerWeak: "The dealer has a high bust probability with 2-6. You don't need a high score to win.",
+                hitToImprove: "Against a strong dealer upcard (7-A), you need to take a risk to improve your score.",
+                double11: "A total of 11 has a high probability (~30%) of hitting 21 with the next card.",
+                doubleStrong: "You have a strong chance to improve while the dealer is vulnerable. Double down to maximize value.",
+                softImprove: "Soft hands allow you to hit without the risk of busting, giving you a free shot to improve."
+            }
+        }
+    };
+
+    const gameState = {
+        lang: 'ko', phase: 'IDLE', balance: 1000, bet: 50, currentHandIndex: 0,
+        deck: [], playerHands: [], dealerHand: []
+    };
+
+    const suits = ['♠', '♥', '♦', '♣'];
+    const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+
+    function initDeck() {
+        gameState.deck = [];
+        for (let i = 0; i < 6; i++) {
+            for (let s of suits) for (let r of ranks) gameState.deck.push({ rank: r, suit: s });
+        }
+        gameState.deck.sort(() => Math.random() - 0.5);
+    }
+
+    function draw() {
+        if (gameState.deck.length < 20) initDeck();
+        return gameState.deck.pop();
+    }
+
+    function getCardValue(card) {
+        if (card.rank === 'A') return 11;
+        if (['K', 'Q', 'J', '10'].includes(card.rank)) return 10;
+        return parseInt(card.rank);
+    }
+
+    function calculateScore(hand) {
+        let score = hand.reduce((acc, c) => acc + getCardValue(c), 0);
+        let aces = hand.filter(c => c.rank === 'A').length;
+        while (score > 21 && aces > 0) { score -= 10; aces--; }
+        return score;
+    }
+
+    function getOptimalActionData() {
+        const hand = gameState.playerHands[gameState.currentHandIndex].cards;
+        const dCard = gameState.dealerHand[0];
+        const pScore = calculateScore(hand);
+        const dVal = getCardValue(dCard);
+        const canSplit = hand.length === 2 && getCardValue(hand[0]) === getCardValue(hand[1]);
+        const canDouble = hand.length === 2;
+
+        if (canSplit) {
+            const v = getCardValue(hand[0]);
+            if (v === 11) return { action: 'Split', reason: 'splitAA' };
+            if (v === 8) return { action: 'Split', reason: 'split88' };
+            if (v === 10) return { action: 'Hold', reason: 'split10' };
+            if ([2, 3, 7].includes(v) && dVal <= 7) return { action: 'Split', reason: 'splitPairWeak' };
+            if (v === 6 && dVal <= 6) return { action: 'Split', reason: 'splitPairWeak' };
+            if (v === 4 && [5, 6].includes(dVal)) return { action: 'Split', reason: 'splitPairWeak' };
+            if (v === 9 && ![7, 10, 11].includes(dVal)) return { action: 'Split', reason: 'splitPairWeak' };
+        }
+
+        const isSoft = hand.length === 2 && hand.some(c => c.rank === 'A');
+        if (isSoft) {
+            if (pScore >= 19) return { action: 'Hold', reason: 'standHigh' };
+            if (pScore === 18 && dVal <= 8) return { action: 'Hold', reason: 'standHigh' };
+            if (pScore === 18 && dVal >= 9) return { action: 'Hit', reason: 'hitToImprove' };
+            return { action: 'Hit', reason: 'softImprove' };
+        }
+
+        if (pScore >= 17) return { action: 'Hold', reason: 'standHigh' };
+        if (pScore >= 13 && dVal <= 6) return { action: 'Hold', reason: 'standDealerWeak' };
+        if (pScore === 12 && [4, 5, 6].includes(dVal)) return { action: 'Hold', reason: 'standDealerWeak' };
+        if (pScore === 11) return { action: canDouble ? 'Double' : 'Hit', reason: 'double11' };
+        if (pScore === 10 && dVal <= 9) return { action: canDouble ? 'Double' : 'Hit', reason: 'doubleStrong' };
+        if (pScore === 9 && [3, 4, 5, 6].includes(dVal)) return { action: canDouble ? 'Double' : 'Hit', reason: 'doubleStrong' };
+
+        return { action: 'Hit', reason: 'hitToImprove' };
+    }
+
+    function updateUI() {
+        const t = i18n[gameState.lang];
+        document.getElementById('txt-capital-label').textContent = t.capital;
+        document.getElementById('txt-stake-label').textContent = t.stake;
+        document.getElementById('txt-dealer-label').textContent = t.dealer;
+        document.getElementById('txt-strategy-header').textContent = t.strategyHeader;
+        document.getElementById('deal-btn').textContent = t.deal;
+        document.getElementById('hit-btn').textContent = t.hit;
+        document.getElementById('hold-btn').textContent = t.hold;
+        document.getElementById('double-btn').textContent = t.double;
+        document.getElementById('split-btn').textContent = t.split;
+        
+        if (gameState.phase === 'IDLE') document.getElementById('analysis-content').textContent = t.strategyStart;
+
+        document.getElementById('balance').textContent = gameState.balance;
+        document.getElementById('bet').textContent = gameState.bet;
+
+        const dCardsCont = document.getElementById('dealer-cards');
+        dCardsCont.innerHTML = '';
+        const revealDealer = gameState.phase === 'DEALER_TURN' || gameState.phase === 'END';
+        gameState.dealerHand.forEach((c, i) => {
+            const cardEl = document.createElement('div');
+            const isHidden = (i === 1 && !revealDealer);
+            cardEl.className = `card ${isHidden ? 'back' : ''} ${!isHidden && (c.suit === '♥' || c.suit === '♦') ? 'red' : ''}`;
+            cardEl.innerHTML = isHidden ? '' : `<span>${c.rank}</span><small>${c.suit}</small>`;
+            dCardsCont.appendChild(cardEl);
+        });
+        document.getElementById('dealer-score-val').textContent = revealDealer ? calculateScore(gameState.dealerHand) : '?';
+
+        const pCont = document.getElementById('player-hands-container');
+        pCont.innerHTML = '';
+        gameState.playerHands.forEach((hand, idx) => {
+            const section = document.createElement('div');
+            section.className = `hand-section ${idx === gameState.currentHandIndex && gameState.phase === 'PLAYER_TURN' ? 'active' : ''}`;
+            section.innerHTML = `<div class="hand-label">${t.hand} ${idx + 1} <span class="score-badge">${calculateScore(hand.cards)}</span> — $${hand.bet}</div>`;
+            const cardsDiv = document.createElement('div');
+            cardsDiv.className = 'cards-display';
+            hand.cards.forEach(c => {
+                const cel = document.createElement('div');
+                cel.className = `card ${c.suit === '♥' || c.suit === '♦' ? 'red' : ''}`;
+                cel.innerHTML = `<span>${c.rank}</span><small>${c.suit}</small>`;
+                cardsDiv.appendChild(cel);
+            });
+            section.appendChild(cardsDiv);
+            pCont.appendChild(section);
+        });
+
+        const isTurn = gameState.phase === 'PLAYER_TURN';
+        document.getElementById('hit-btn').disabled = !isTurn;
+        document.getElementById('hold-btn').disabled = !isTurn;
+        if (isTurn) {
+            const curHand = gameState.playerHands[gameState.currentHandIndex];
+            const canAct = curHand.cards.length === 2;
+            document.getElementById('double-btn').disabled = !canAct || gameState.balance < curHand.bet;
+            document.getElementById('split-btn').disabled = !canAct || getCardValue(curHand.cards[0]) !== getCardValue(curHand.cards[1]);
+        } else {
+            document.getElementById('double-btn').disabled = true;
+            document.getElementById('split-btn').disabled = true;
+        }
+        document.getElementById('deal-btn').disabled = (gameState.phase === 'PLAYER_TURN' || gameState.phase === 'DEALER_TURN');
+    }
+
+    function provideFeedback(playerAction) {
+        const { action: optimal, reason } = getOptimalActionData();
+        const t = i18n[gameState.lang];
+        const content = document.getElementById('analysis-content');
+        const actionMap = { 'Hit': t.hit, 'Hold': t.hold, 'Double': t.double, 'Split': t.split };
+        const optLocal = actionMap[optimal];
+        const actLocal = actionMap[playerAction];
+
+        let feedbackHTML = "";
+        if (playerAction === optimal) {
+            feedbackHTML = `<span style="color:var(--success)">${t.perfect}</span> ${t.perfectDesc.replace('{optimal}', optLocal)}`;
+        } else {
+            feedbackHTML = `<span style="color:var(--danger)">${t.error}</span> ${t.errorDesc.replace('{action}', actLocal).replace('{optimal}', optLocal)}`;
+        }
+        feedbackHTML += `<span class="strategy-reason">${t.reasons[reason]}</span>`;
+        content.innerHTML = feedbackHTML;
+
+        if (typeof gtag === 'function') {
+            gtag('event', 'player_action', { 'action_type': playerAction, 'is_optimal': playerAction === optimal, 'score': calculateScore(gameState.playerHands[gameState.currentHandIndex].cards) });
+        }
+    }
+
+    function handleDeal() {
+        if (gameState.balance < gameState.bet) return;
+        if (gameState.deck.length === 0) initDeck();
+        gameState.balance -= gameState.bet;
+        gameState.phase = 'PLAYER_TURN';
+        gameState.currentHandIndex = 0;
+        gameState.dealerHand = [draw(), draw()];
+        gameState.playerHands = [{ cards: [draw(), draw()], bet: gameState.bet, isDone: false }];
+        document.getElementById('result-banner').textContent = '';
+        document.getElementById('analysis-content').textContent = gameState.lang === 'ko' ? "패를 분석 중..." : "Analyzing hand...";
+        updateUI();
+        if (calculateScore(gameState.playerHands[0].cards) === 21) nextHand();
+    }
+
+    function handleHit() { provideFeedback('Hit'); const h = gameState.playerHands[gameState.currentHandIndex]; h.cards.push(draw()); if (calculateScore(h.cards) >= 21) nextHand(); updateUI(); }
+    function handleHold() { provideFeedback('Hold'); nextHand(); updateUI(); }
+    function handleDouble() { provideFeedback('Double'); const h = gameState.playerHands[gameState.currentHandIndex]; gameState.balance -= h.bet; h.bet *= 2; h.cards.push(draw()); nextHand(); updateUI(); }
+    function handleSplit() { provideFeedback('Split'); const hands = gameState.playerHands; const cur = hands[gameState.currentHandIndex]; gameState.balance -= cur.bet; const newHand = { cards: [cur.cards.pop(), draw()], bet: cur.bet, isDone: false }; cur.cards.push(draw()); hands.splice(gameState.currentHandIndex + 1, 0, newHand); updateUI(); }
+    function nextHand() { gameState.currentHandIndex++; if (gameState.currentHandIndex >= gameState.playerHands.length) { gameState.phase = 'DEALER_TURN'; dealerTurn(); } }
+    async function dealerTurn() { updateUI(); await new Promise(r => setTimeout(r, 800)); while (calculateScore(gameState.dealerHand) < 17) { gameState.dealerHand.push(draw()); updateUI(); await new Promise(r => setTimeout(r, 800)); } gameState.phase = 'END'; finalize(); }
+
+    function finalize() {
+        const dScore = calculateScore(gameState.dealerHand);
+        const t = i18n[gameState.lang];
+        let results = [];
+        gameState.playerHands.forEach((h, i) => {
+            const pScore = calculateScore(h.cards);
+            let resTxt = "";
+            if (pScore > 21) resTxt = t.bust;
+            else if (dScore > 21 || pScore > dScore) {
+                const isBJ = pScore === 21 && h.cards.length === 2;
+                gameState.balance += isBJ ? h.bet * 2.5 : h.bet * 2;
+                resTxt = `${t.win} ${isBJ ? '('+t.blackjack+')' : ''}`;
+            } else if (pScore === dScore) { gameState.balance += h.bet; resTxt = t.push; }
+            else resTxt = t.lose;
+            results.push(`H${i+1}: ${resTxt}`);
+        });
+        document.getElementById('result-banner').textContent = results.join(' | ');
+        updateUI();
+        if (typeof gtag === 'function') { gtag('event', 'game_end', { 'final_balance': gameState.balance, 'dealer_score': dScore }); }
+    }
+
+    document.getElementById('deal-btn').onclick = handleDeal;
+    document.getElementById('hit-btn').onclick = handleHit;
+    document.getElementById('hold-btn').onclick = handleHold;
+    document.getElementById('double-btn').onclick = handleDouble;
+    document.getElementById('split-btn').onclick = handleSplit;
+    document.getElementById('language-select').onchange = (e) => { gameState.lang = e.target.value; updateUI(); };
+    initDeck();
+    updateUI();
+</script>
+      <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch('../../footer.html')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(data => {
+                    document.getElementById('footer-placeholder').innerHTML = data;
+                    lucide.createIcons();
+                })
+                .catch(error => {
+                    console.error('Error fetching footer:', error);
+                    document.getElementById('footer-placeholder').innerHTML = '<p style="text-align: center; color: red;">푸터를 불러오는 데 실패했습니다.</p>';
+                });
+        });
+    </script>
+</body>
+  <!-- Last updated: 2026-02-06 15:16 KST -->
+</html>
